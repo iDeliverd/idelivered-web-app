@@ -1,0 +1,11 @@
+
+  <input *ngIf="styleSettings"  [style.width]="styleSettings.width" [class.not-rounded]="!styleSettings.rounded"  type="text" name="search"
+  placeholder="{{'Search words' | translate}}"
+   autocomplete="off" [formControl]="searchText" (focus)="styleSettings.visible=true;" (keydown.enter)="$event.preventDefault()" />
+<ul *ngIf="styleSettings.visible && styleSettings" [class.autosuggest-list]="foundWords.length>0" [style.width]="styleSettings.width">
+    <li *ngFor="let word of foundWords" (click)="locateWord(word.words)"><a><img src="assets/images/IC.png" alt="what3words">{{word.words}}</a></li>
+</ul>
+<div class="text-error" *ngIf="searchText.errors?.required && searchText.touched"> {{'Please enter address' | translate}}</div>
+<div class="text-error" *ngIf="searchText.errors?.pattern && searchText.touched"> {{'Invalid address' | translate}}</div>
+
+          

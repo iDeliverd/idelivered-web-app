@@ -1,0 +1,26 @@
+<ng-container *ngIf="!!products?.length; then data; else noData"></ng-container>
+
+<ng-template #data>
+
+    <!-- <div class="" [style.border-color]="suggestions.length ? style.secondaryColor : 'transparent'" style="border: 1px solid"> -->
+
+        <div *ngFor="let product of suggestions; let index = index;trackBy:trackByProduct2Fn" class="single-item-wrap">
+        <app-cart-suggetion [settings]="settings" [style]="style" [product]="product" (remove)=removeFromCart(index)
+            (onPlus)="addProduct(product)" (onMins)="mins(product, index)"
+            (onCustomizationUpdate)="updateCustomizationQuantity($event, index)"></app-cart-suggetion>
+        </div>
+
+    <!-- </div> -->
+
+</ng-template>
+
+<ng-template #noData>
+  <div class="empty-cart" [ngStyle]="{'border-color': darkTheme ? style.baseColor : style.cardBackgroundColor}">
+    <img [src]="settings.placeholder.empty_cart.web || '/assets/images/empty-cart' + settings.app_type + '.png'"
+      height="150" width="200">
+    <h5 [style.color]="style.baseColor" class="choose_agnt">{{'emptyCartMsg' | localization | translate}} </h5>
+    <p>
+      <a [style.color]="style.primaryColor" [routerLink]="['/']" class="next-btn">{{"Continue" | translate }}</a>
+    </p>
+  </div>
+</ng-template>

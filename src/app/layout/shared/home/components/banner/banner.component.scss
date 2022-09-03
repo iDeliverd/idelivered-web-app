@@ -1,0 +1,35 @@
+.banner-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.banner-placeholder {
+  width: 100%;
+  height: 240px;
+  background: #ddd;
+}
+// .banner_width {
+//   width: auto !important;
+//   object-fit: fill !important;
+// }
+
+.banner_prod_main {
+  position: absolute !important;
+  top: 50%;
+  z-index: 9;
+}
+
+.banner_title {
+  font-size: 22px;
+  color: white;
+  font-weight: bolder;
+  text-shadow: 3px 3px #9a94;
+}
+.banner_shade {
+  background-color: #00000030;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+}

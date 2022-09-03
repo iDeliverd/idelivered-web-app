@@ -1,0 +1,29 @@
+.app-dwnld {
+    margin-right: 20px;
+    a {
+        img {
+            height: 30px;
+        }
+    }
+}
+.add-header-search {
+    display: flex;
+}
+
+.top-nav-category.without-img img {
+    display: none;
+    transition: all 0.5s ease-in-out 0s;
+}
+.top-nav-category p {
+    margin-bottom: 0px;
+}
+.circle {
+    border-radius: 50%;
+    width: 60px;
+    height: 48px;
+}
+.home_icon {
+    font-size: 30px;
+    padding: 0px;
+    margin: 0px 9px -4px 0px;
+}

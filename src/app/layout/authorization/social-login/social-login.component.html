@@ -1,0 +1,21 @@
+<div class="mb-4 row col-md-12 mr-0 ml-0">
+  <div class="col-md-12" *ngIf="is_facebook_login">
+    <div class="facebook-login" (click)="socialSignIn('facebook')" style="cursor: pointer;">
+      <a>
+        <img src="/assets/images/fb_icon.png">
+        <span *ngIf="settings?.social_login_icon_format == 1">Continue with Facebook</span>
+        <span *ngIf="settings?.social_login_icon_format != 1">Facebook</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-12" *ngIf="is_google_login">
+    <div class="google-login" (click)="socialSignIn('google')" style="cursor: pointer;">
+      <a>
+        <img src="/assets/images/google_logo.png">
+        <span *ngIf="settings?.social_login_icon_format == 1">Continue with Google</span>
+        <span *ngIf="settings?.social_login_icon_format != 1">Google</span>
+      </a>
+    </div>
+  </div>
+</div>

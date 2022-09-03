@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+a {
+  cursor: pointer;
+}
+
+.list-header {
+  font-size: 12px;
+  padding: 0px 20px;
+  cursor: default;
+}
+
+.cancel {
+  margin-bottom: 3px;
+  margin-left: -40px;
+  color: #949494;
+}
+
+.search-results {
+  margin-top: 0px !important;
+}
+.cart-item {
+  position: relative;
+  outline: none;
+}
+
+.cancel-btn {
+  color: #949494;
+  background: transparent;
+  border: none;
+  bottom: -3px;
+  position: absolute;
+  right: -10px;
+}
+
+.dropdown-menu {
+  min-width: 8rem !important;
+  padding: 0.5rem 0.5rem !important;
+}
+
+@media screen and (max-width: 812px) {
+  .open_menu {
+    font-size: 26px;
+    float: right;
+    position: relative;
+    right: -27px;
+  }
+  .sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: var(--primaryColor);
+    overflow-x: hidden;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    padding-top: 80px;
+    box-shadow: 0px 0px 30px rgba(64, 80, 74, 0.22);
+  }
+
+  .sidenav a:hover {
+    color: #f1f1f1;
+  }
+
+  .sidenav .closebtn {
+    position: absolute;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    color: #fff;
+    line-height: 20px;
+    margin-top: 10px;
+  }
+  a.closebtn,
+  .open_menu {
+    display: block !important;
+  }
+}
+
+.saned-search-fix {
+  flex: 40%;
+
+}
+
+.search_textbox {
+  box-shadow: none !important;
+  border-radius: 0;
+  border: 0;
+  outline: 0 !important;
+  font-size: 32px;
+  padding: 10px 80px 10px 0;
+  height: 100%;
+  background-color: transparent;
+  color: #333;
+  font-weight: 700;
+  margin-top: 0 !important;
+  letter-spacing: 2px;
+}
+
+.srch_close {
+  font-size: 30px;
+}
+.srch_ic {
+  position: absolute;
+  right: 0px;
+  top: 4px;
+  font-size: 20px;
+  color: #333;
+  cursor: pointer;
+  transition: 0.6s;
+}
+.srch_ic:hover {
+  font-size: 30px;
+  color: #000;
+}
+.cancel-btn {
+  bottom: 10px;
+}

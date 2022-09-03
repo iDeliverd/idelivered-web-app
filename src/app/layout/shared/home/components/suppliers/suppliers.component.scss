@@ -1,0 +1,21 @@
+.filter_button_to_middle {
+    margin: 0;
+    // position: sticky;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    padding: 55px 0px 0px;
+    z-index: 2;
+    position: relative;
+}
+
+@media only screen and (max-width: 576px)
+{
+    .fix123{
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        left: 25px;
+
+
+    }}

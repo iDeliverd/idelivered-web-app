@@ -1,0 +1,56 @@
+<section>
+    <div class="container">
+        <div class="row" *ngIf="allSuppliers.length > 0">
+            <div class="col-md-12">
+                <div class="Restaurants-heading">
+                    <h2>
+                        <ng-container [ngSwitch]="type">
+
+                            <ng-template [ngSwitchCase]="1">Breakfast in Beirut</ng-template>
+                            <ng-template [ngSwitchCase]="2">Only on Sakado</ng-template>
+                            <ng-template [ngSwitchCase]="3">Loved by Locals</ng-template>
+                            <ng-template [ngSwitchCase]="4">Sweet Spot</ng-template>
+                            <ng-template [ngSwitchCase]="5">Grape and Grain</ng-template>
+                            <ng-template ngSwitchDefault>Breakfast in Beirut</ng-template>
+                        </ng-container>
+                    </h2>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <ng-container *ngIf="!isLoading; else skeleton2">
+                    <ngx-slick-carousel class="carousel flex_box flex_slide" #slickModal="slick-carousel"
+                        [config]="slideConfig" [ngClass]="allSuppliers.length < 4 ? 'slide_track_width' : ''">
+                        <div ngxSlickItem
+                            *ngFor="let supplier of allSuppliers; let i = index;trackBy:trackBySpecialOffersFn"
+                            class="slide flex_box">
+                            <div class="item">
+                                <div class="supplier_box">
+                                    <div class="supplier-img">
+                                        <img [ngStyle]="{'border-color': style.secondaryColor}" appImage
+                                            [url]="supplier?.logo" [size]="'600x500'" alt="supplier"
+                                            [settings]="settings" [src]="supplier?.logo"
+                                            onError="src = '/assets/images/placeholder_image.svg';"
+                                            (click)="productList(supplier)" @fade>
+                                        <h3 class="product-name" data-toggle="tooltip" [title]="supplier?.name"
+                                            [style.color]="style.baseColor" (click)="productList(supplier)" @fade>
+                                            {{supplier?.name}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ngx-slick-carousel>
+                </ng-container>
+
+                <ng-template #skeleton2>
+                    <div class="skeleton col-md-63"
+                        *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByFakeListFn">
+                        <app-supplier-skeleton [style]="style" [settings]="settings">
+                        </app-supplier-skeleton>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+
+</section>

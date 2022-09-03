@@ -1,0 +1,9 @@
+<div class="row">
+    <div class="col-md-12">
+
+        <img class="banner-img mt-0 h-125" [noCrop]="settings?.is_crop_banner == 0 ? true : false"
+        appImage [url]="is_mobile? banners[0]?.phone_image : banners[0]?.website_image"  
+          alt="banner" [ngClass]="{'pointer': banners[0]?.supplier_id && (settings.single_vendor_id == 0)}" [src]="is_mobile ? banners[0]?.phone_image :banners[0]?.website_image"
+          onError="src = './assets/images/placeholder_image.svg';" (click)="viewSupplier(banners[0])">
+        </div>
+</div>

@@ -1,0 +1,36 @@
+.dropdown {
+    button {
+        border: 1px solid var(--primaryColor) !important;
+        border: 4px;
+        padding: 5px 15px;
+    }
+}
+@media only screen and (max-width: 576px)
+{
+    #dropdownMenuLink{
+        margin-left: 5px;
+
+
+    }}
+
+
+
+// @media (max-width:360){
+   
+//   }
+
+
+// @media (max-width: 360%)  {
+//     .dropdown[_ngcontent-saas-website-c255] button[_ngcontent-saas-website-c255]{
+//         margin: 100pxpx;
+//       }
+// }
+
+
+
+@media screen and (max-width: 786px){
+    .mob
+    {
+        width:100%;
+    }
+}

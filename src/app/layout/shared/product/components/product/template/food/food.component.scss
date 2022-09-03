@@ -1,0 +1,26 @@
+.allergy {
+    width: 20px;
+    height: 26px;
+    position: absolute;
+    top: 4px;
+    right: 25px;
+    cursor: pointer;
+}
+.instruction {
+    right: 52px !important;
+}
+.categories-item-product-detail.product-item p {
+    width: 100% !important;
+}
+
+.categories-item-product-img .fit_img {
+    width: 100%;
+    border-radius: 4px;
+    height: 130px;
+    object-fit: fill !important;
+}
+@media screen and (max-width: 600px) {
+    .customisable {
+        left: 2px;
+    }
+}

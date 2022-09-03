@@ -1,0 +1,79 @@
+<!-- Start Login Model -->
+<div id="auth" #auth class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog" style="max-width: 420px;">
+    <div class="modal-content"
+      [style.borderRadius]="settings?.selected_template == 3 && settings?.app_type == 8 ? '20px':''">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" #closeModal (click)="closeAuthModal()"></button>
+      </div>
+      <div class="modal-body">
+
+        <app-login *ngIf="isLogin && !forgotPassword && !updatePassword" (openForgot)="openForgotPassword()"
+          (socialLogin)="onSocialLogin($event)" [is_tnc_checked]="is_tnc_checked"
+          (onIncompleteProfile)="onInCompleteProfile($event)" (closeModal)="closeModalFromChild($event)"></app-login>
+        <app-sign-up *ngIf="!isLogin && !forgotPassword && !updatePassword" [is_tnc_checked]="is_tnc_checked"
+          (closeModal)="closeModalFromChild($event)" (otherLogins)="otherLogins = $event"
+          [inCompleteProfile]="inCompleteProfile"></app-sign-up>
+        <app-forgot-password *ngIf="forgotPassword && !updatePassword" (closeModal)="closeModalFromChild($event)"
+          (eventUpdatePswd)="openUpdatePassword()" (forgotPswdMobileNo)="setMobileNo($event)"></app-forgot-password>
+        <app-update-password *ngIf="updatePassword" (closeModal)="closeModalFromChild($event)"
+          [mobile_no]="mobileNoToUpdatePswd"></app-update-password>
+
+        <div class="other-logins" *ngIf="otherLogins && settings?.enable_coming_soon_flow == 0">
+          <ul>
+            <li [style.color]="style?.defaultColor" *ngIf="settings?.auth_terms_check == 1">
+              <span>
+                <input type="checkbox" class="check_tnc" [(ngModel)]="is_tnc_checked">
+                <span class="ml-2 tnc_txt">
+                  <span [style.color]="style?.primaryColor">
+                  <a  *ngIf="settings?.display_privacy_on_supplier_reg == 0"
+                  [style.color]="style?.primaryColor" [routerLink]="[settings?.enable_separate_terms_user_supplier == 0 ? '/terms-and-conditions' : '/user-terms-and-conditions']"
+                    target="_blank">{{'accept_term_conditions' | localization | translate}}</a>
+                  <span *ngIf="settings?.display_privacy_on_supplier_reg == 1">
+                    {{'i_accept'| localization | translate}}
+                      <a [style.color]="style?.primaryColor" 
+                      [routerLink]="[settings?.enable_separate_terms_user_supplier == 0 ? '/terms-and-conditions' : '/user-terms-and-conditions']"
+                      target="_blank">{{'terms_and_conditions' | localization | translate}}</a>
+                      &
+                      <a [style.color]="style?.primaryColor" routerLink="/privacy-policy" target="_blank">{{'privacy_policy' |
+                        localization | translate}}</a>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </li>
+
+            <li [style.color]="style?.defaultColor" *ngIf="isLogin || forgotPassword">
+              {{'Not registered yet?' | translate}} <a [style.color]="style?.primaryColor"
+                (click)="isLogin = false; forgotPassword = false;">{{'sign_up' | localization | translate}}</a></li>
+
+            <li [style.color]="style?.defaultColor" *ngIf="!isLogin || forgotPassword">
+              {{'Already have an account?' | translate}} <a [style.color]="style?.primaryColor"
+                (click)="isLogin = true; forgotPassword = false;">{{'Login' | translate}}</a></li>
+            <li *ngIf="settings?.is_vendor_registration == 1">
+              <a [style.color]="style?.primaryColor" *ngIf="settings?.enable_vendor_reg_via_link == 0"
+                [routerLink]="'/vendor-signup'">
+                {{'register_supplier' | localization | translate}}</a>
+              <a *ngIf="settings?.enable_vendor_reg_via_link == 1" [style.color]="style?.primaryColor" target="_blank"
+                [href]="registrationUrl">
+                {{'register_supplier' | localization | translate}}</a>
+            </li>
+            <!-- <li [style.color]="style?.defaultColor" *ngIf="!forgotPassword">{{'Interested in selling?' | translate}} <a [style.color]="style?.primaryColor" target="_blank" href="http://45.232.252.46:3007/">{{'Get Started' | translate}}</a></li> -->
+          </ul>
+          <!-- <p [style.color]="style?.baseColor" *ngIf="isLogin || forgotPassword">Not registered yet? <a [style.color]="style?.primaryColor" (click)="isLogin = false; forgotPassword = false;">Sign up</a> </p>
+          <p [style.color]="style?.baseColor" *ngIf="!isLogin || forgotPassword">Already have an account? <a [style.color]="style?.primaryColor" (click)="isLogin = true; forgotPassword = false;">Login</a> </p>
+          <p [style.color]="style?.baseColor" *ngIf="!forgotPassword">Interested in selling? <a [style.color]="style?.primaryColor" target="_blank" href="http://45.232.252.46:3007/">Get Started</a> </p> -->
+        </div>
+      </div>
+
+      <div *ngIf="settings?.login_page_disclaimer == 1 && isLogin" style="font-size: 13px; color: rgb(81, 81, 81);">
+        <hr>
+        <div [innerHtml]="loginDisclaimer | safe: 'html'"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- End Login Model -->
+
+<!-- <button type="button" data-toggle="modal" data-target="auth" #toggleAuth></button> -->

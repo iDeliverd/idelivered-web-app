@@ -1,0 +1,36 @@
+.m_cross {
+    color: #fff !important;
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid#007bff !important;
+    border-radius: 50% !important;
+    width: 35px !important;
+    height: 35px !important;
+    line-height: 30px !important;
+    text-align: center !important;
+    background-color: #007bff !important;
+}
+.pay-box a img{
+    width: 120px;
+    border-radius: 5px;
+    border: 1px solid #e61515;
+    padding: 10px;
+    height: 80px;
+    object-fit: cover;
+}
+.pay-box a{
+    display:inline-block;
+    margin-right:15px;
+    
+}
+
+.pay-box{
+ border: none !important;   
+}
+
+a:hover {
+    background-color: yellow;
+  }
+

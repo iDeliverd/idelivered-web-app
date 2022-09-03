@@ -1,0 +1,65 @@
+a {
+    cursor: pointer;
+}
+
+img {
+    height: 35px;
+    width: 35px;
+}
+
+.navbar-nav {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+}
+
+#primary-menu ul li > a {
+    padding: 5px;
+}
+.menu-home a {
+    padding: 0px;
+}
+.user-profile a.nav-link img {
+    border-radius: 50%;
+    width: 29px;
+    height: 29px;
+    position: relative;
+    top: -5px;
+    text-align: center;
+    max-width: unset;
+}
+
+.user-profile li a {
+    line-height: 31px;
+    color: inherit;
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+.usr-img {
+    border-radius: 50%;
+}
+.dropdown-menu.wish-drop-for {
+    top: 51px !important;
+}
+
+.agent_web_signup {
+    text-transform: uppercase;
+    width: 145px;
+    margin: 25px 0px !important;
+}
+.agent_web_signup_main {
+    width: 28% !important;
+    float: right !important;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+.full-header{
+    z-index: 0;
+}
+
+#header {
+    position: static;
+    background-color: #FFF;
+    border-bottom: 1px solid #F5F5F5;
+}

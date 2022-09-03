@@ -1,0 +1,29 @@
+<ng-container>
+    <div class="dialog-model">
+        <div class="dialog-content" style="max-width: 570px;">
+            <div class="container">
+                <div class="dialog-header">
+                    <a href="javascript:void(0)" class="dialog-close-button" (click)="close(false)">&times;</a>
+                </div>
+                <h2>{{'Special Instruction' | translate}}</h2>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <textarea class="form-control" [disabled]="only_viewing"
+                            placeholder="{{'E.g. no sauce, extra spicy, food allergies, anything with extra charges will be ignored.' | translate }}"
+                            [(ngModel)]="special_instructions"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" *ngIf="!only_viewing" (click)="close(true)"
+                        [ngStyle]="{'backgroundColor': style?.primaryColor, 'borderColor': style?.primaryColor, 'color': '#ffffff'}"
+                        class="btn" aria-label="Close">{{'Proceed' | translate}}</button>
+                </div>
+
+                <!-- <div class="container" [innerHtml]="special_instructions | safe: 'html'"></div> -->
+
+            </div>
+        </div>
+    </div>
+</ng-container>

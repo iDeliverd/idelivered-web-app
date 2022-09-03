@@ -1,0 +1,85 @@
+<div class="mobile-footer">
+    <div *ngIf="viewSearch">
+        <app-search style="display: block;" [settings]="settings" [style]="style" (searched)="viewSearch = $event">
+        </app-search>
+    </div>
+
+    <div class="mobile-footer-list" [style.background-color]="style?.headerBackgroundColor || style.backgroundColor">
+        <a [ngClass]="router.url === '/' ? 'default-pointer' : 'pointer'" [routerLink]="['/']" class="select"
+            [style.width]="(settings?.isCustomFlow && router.url === '/') ? '50%' : (settings?.app_type == 8 || settings?.app_type > 10 ? '33.33%' : '25%')"
+            [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+            <i class="fa fa-home" aria-hidden="true"></i>
+            <span>{{'Home' | translate}}</span>
+        </a>
+        <a (click)="viewSearch = !viewSearch" class="cursor" *ngIf="!(settings?.isCustomFlow && router.url === '/')"
+            [style.width]="(settings?.isCustomFlow && router.url === '/') ? '50%' : (settings?.app_type == 8 || settings?.app_type > 10 ? '33.33%' : '25%')"
+            [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <span>{{'Search' | translate}}</span>
+        </a>
+        <a *ngIf="settings?.app_type != 2"
+            [style.width]="(settings?.isCustomFlow && router.url === '/') ? '50%' : (settings?.app_type == 8 || settings?.app_type > 10 ? '33.33%' : '25%')"
+            [routerLink]="['/products/all-discounted-products']" [queryParams]="{type: 1}"
+            [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+            <i class="fa fa-gift" aria-hidden="true"></i>
+            <span>{{'Offers' | translate}}</span>
+        </a>
+        <a *ngIf="settings?.app_type == 2"
+            [style.width]="(settings?.isCustomFlow && router.url === '/') || settings?.app_type == 8 ? '33.33%' : '25%'"
+            [routerLink]="['/products/category-listing']"
+            [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+            <i class="fa fa-list" aria-hidden="true"></i>
+            <span>{{'Categories' | translate}}</span>
+        </a>
+        <a class="mobile-cart"
+            *ngIf="!(settings?.isCustomFlow && router.url === '/') && settings?.app_type != 8 && settings?.app_type < 11">
+            <app-header-cart [style]="style" [settings]="settings" class="cart_div"></app-header-cart>
+        </a>
+
+        <a *ngIf="settings?.enable_agent_signup_web == 1"
+            [style.width]="(settings?.isCustomFlow && router.url === '/') ? '50%' : (settings?.app_type == 8 || settings?.app_type > 10 ? '33.33%' : '25%')">
+            <ng-container [ngTemplateOutlet]="moreMenu"></ng-container>
+        </a>
+
+    </div>
+</div>
+
+
+
+<ng-template #moreMenu>
+    <span class="nav-item dropdown ml-4" style="margin-right:10px;"
+        [ngClass]="!loggedIn && settings?.enable_coming_soon_flow == 1 ? 'disabled' : ''">
+
+        <a class="nav-link dropdown-toggle menu_link" data-toggle="dropdown" [style.color]="style?.headerTextColor"
+            [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase'}">
+            <i class="fa fa-list"></i>
+            {{'Menu' | translate}}
+        </a>
+        <div class="dropdown-menu">
+            <ul>
+                <li class="nav-item"
+                    *ngIf="!loggedIn && settings?.enable_agent_signup_web == 1 && settings?.is_vendor_registration == 1"
+                    routerLinkActive='active' (mouseleave)="hoverType = ''" (mouseover)="hoverType = 'SIGNUP'">
+                    <a class="nav-link menu_link" [routerLink]="'/vendor-signup'" [style.color]="style?.headerTextColor"
+                        [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase', 'width': '180px'}">
+                        {{'Become A Vendor' | translate}}</a>
+                </li>
+
+                <li class="nav-item" *ngIf="!loggedIn && settings?.enable_agent_signup_web == 1"
+                    routerLinkActive='active' (mouseleave)="hoverType = ''" (mouseover)="hoverType = 'SIGNUP'">
+                    <a class="nav-link menu_link" [routerLink]="'/agent-signup'" [style.color]="style?.headerTextColor"
+                        [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase', 'width': '165px'}">
+                        {{'Become A Driver' | translate}}</a>
+                </li>
+
+                <li class="nav-item"
+                    *ngIf="settings?.enable_agent_signup_web == 1 && settings?.hide_agent_signup_web_about_us == 1"
+                    routerLinkActive='active' (mouseleave)="hoverType = ''" (mouseover)="hoverType = 'SIGNUP'">
+                    <a class="nav-link menu_link" [routerLink]="['/about']" [style.color]="style?.headerTextColor"
+                        [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase', 'width': '165px'}">
+                        {{'about_us' | localization | translate}}</a>
+                </li>
+            </ul>
+        </div>
+    </span>
+</ng-template>

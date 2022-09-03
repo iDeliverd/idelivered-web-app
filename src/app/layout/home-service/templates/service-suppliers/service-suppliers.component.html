@@ -1,0 +1,41 @@
+<div *ngIf = "all_supplier == 1" class="row">
+    <div class="offset-md-6 col-md-4" style="text-align: right;">
+        <app-supplier-cat-sorting [style]="style" [settings]="settings" [catShortValue]="catShortValue"
+            (onCatSort)="onCatSortBy($event)" class="sorting-btn">
+        </app-supplier-cat-sorting>
+    </div>
+    <div class="col-md-2" style="text-align: center;">
+        <app-supplier-sorting [style]="style" (onSort)="onSortBy($event)" class="sorting-btn">
+        </app-supplier-sorting>
+    </div>
+</div>
+
+<div class="row" *ngIf="!isLoading; else skeleton">
+    <h2 *ngIf = "all_supplier == 1" class="title" [style.color]="style.baseColor">{{'Service Providers' | translate}}</h2>
+    <h2 *ngIf = "all_supplier != 1" class="title" [style.color]="style.baseColor">{{'Top Service Providers' | translate}}</h2>
+
+    <ng-container *ngIf="homeData && homeData.length; else noData">
+        <div class="col-lg-4 col-md-6 col-sm-6 neapolitan-section top-service-providers"
+            *ngFor="let supplier of homeData.slice(0, 6); let i = index;trackBy:trackBySupplierFn;">
+            <app-supplier [supplier]="supplier" [settings]="settings" [style]="style"></app-supplier>
+        </div>
+        <div class="see_more-btn" *ngIf="homeData.length > 6">
+            <button class="btn btn-large"
+                [ngStyle]="{'borderColor': style.primaryColor, 'backgroundColor': 'style.primaryColor !important'}"
+                (click)="onSeeMore()">{{'See More' | translate}}</button>
+        </div>
+    </ng-container>
+    <ng-template #noData>
+        <div class="home-no-data">
+            <h4 [style.color]="style.baseColor">No {{'suppliers' | localization}} Found</h4>
+        </div>
+    </ng-template>
+</div>
+
+<ng-template #skeleton>
+    <div class="row">
+        <div class="col col-md-4 skeleton" *ngFor="let item of util.generateFakeList(4);trackBy:trackByFakeListFn;">
+            <app-supplier-skeleton [settings]="settings" [style]="style"></app-supplier-skeleton>
+        </div>
+    </div>
+</ng-template>

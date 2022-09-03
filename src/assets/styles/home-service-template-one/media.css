@@ -1,0 +1,22 @@
+@media only screen  and (max-width: 480px) {} 
+	@media only screen  and (max-width: 576px) {}
+	@media only screen  and (max-width: 767px){
+        .mobile-header{height:70px;z-index:2;}
+        .ngx-pagination.responsive .small-screen{padding:20px;}
+        ul.dropdown-menu.location-drop.show {
+            left: 10px;
+            margin-top: 30px;
+            padding: 10px;
+        }
+        .slick-dots {
+            bottom: 20px !important;
+        }
+        li.slick-active button {
+            border-color: #000 !important;
+        }
+        .recoomond_section{margin-top:0;padding-top:0;}
+              
+    } 
+	@media only screen  and (max-width: 991px){} 
+	@media only screen  and (max-width: 1024px){}
+	@media only screen  and (max-width: 1199px){}

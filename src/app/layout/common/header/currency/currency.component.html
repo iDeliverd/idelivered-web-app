@@ -1,0 +1,57 @@
+<div class="headerrit" *ngIf="!settings?.isCustomFlow || (settings?.isCustomFlow && settings?.app_type <= 10)">
+    <ul class="new-top-header-right">
+        <li class="nav-item dropdown language-dropdown">
+            <a class="nav-link dropdown-toggle" style="cursor: pointer;"
+                [style.backgroundColor]="style.footerSecColor || style.topHeaderBackgroundColor || style.headerBackgroundColor"
+                data-toggle="dropdown" id="navbarDropdown"
+                [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+                <span *ngIf="!selectedCurrency?.currency_name">
+                    {{'Currency' | translate}}
+                </span> 
+
+                <img *ngIf="!!selectedCurrency?.country_name && settings?.show_currency_flag==1"
+          [src]="'https://www.countryflags.io/' + selectedCurrency?.country_name + '/flat/16.png'"> {{selectedCurrency?.currency_name | translate}}
+                <b><span *ngIf="selectedCurrency?.currency_symbol && settings?.hide_currency_symbol == 0">({{selectedCurrency?.currency_symbol}})</span></b>
+                <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </a>
+            <div class="dropdown-menu drop-menu">
+                <span *ngFor="let cr of currencyData">
+                    <a class="dropdown-item pd pointer" (click)="currencySelect(cr)"
+                        [style.backgroundColor]="style.footerSecColor || style.topHeaderBackgroundColor || style.headerBackgroundColor"
+                        [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+                        <img *ngIf="!!cr?.country_name && settings?.show_currency_flag==1"
+          [src]="'https://www.countryflags.io/' + cr?.country_name + '/flat/16.png'">
+                        {{cr?.currency_name | translate}} <b *ngIf="settings?.hide_currency_symbol == 0">({{cr?.currency_symbol}})</b>
+                    </a>
+                </span>
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+<ul class="new-top-header-right" *ngIf="settings?.isCustomFlow && settings?.app_type > 10">
+    <li class="nav-item dropdown language-dropdown">
+        <a class="nav-link dropdown-toggle" style="cursor: pointer;"
+            [style.backgroundColor]="style.footerSecColor || style.topHeaderBackgroundColor || style.headerBackgroundColor"
+            data-toggle="dropdown" id="navbarDropdown"
+            [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+            <span *ngIf="!selectedCurrency?.currency_name">
+                {{'Currency' | translate}}
+            </span> {{selectedCurrency?.currency_name | translate}}
+            <b><span *ngIf="selectedCurrency?.currency_symbol">({{selectedCurrency?.currency_symbol}})</span></b>
+            <i [style.color]="style?.topHeaderTextColor || style?.headerTextColor" class="fa fa-caret-down"
+                aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu drop-menu">
+            <span *ngFor="let cr of currencyData">
+                <a class="dropdown-item pd cursor" (click)="currencySelect(cr)"
+                    [style.backgroundColor]="style.footerSecColor || style.topHeaderBackgroundColor || style.headerBackgroundColor"
+                    [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+                    {{cr?.currency_name | translate}}
+                    <b>({{cr?.currency_symbol}})</b>
+                </a>
+            </span>
+        </div>
+    </li>
+</ul>

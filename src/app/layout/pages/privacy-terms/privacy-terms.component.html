@@ -1,0 +1,36 @@
+<div class="privacy_policy_page container" *ngIf="settings?.enable_custom_pages == 0">
+    <div class="row">
+        <div class="col-12 col-md-12">
+            <h2 class="mb-3">{{heading | translate }}</h2>
+            <div class="container" [innerHtml]="terms | safe: 'html'"></div>
+        </div>
+    </div>
+
+</div>
+<div class="custom_block" *ngIf="settings?.enable_custom_pages == 1">
+    <div class="privacy_policy_page container">
+        <h2 class="heading">{{heading | translate }}</h2>
+        <div class="row" *ngIf="customData.length">
+            <div class="col-md-3">
+                <ul class="left_side_block">
+                    <li *ngFor="let data of customData; let i = index" (click)="scrollTo(i)">{{data.title}}</li>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div class="right_side_block">
+                    <div class="custom-pages" *ngFor="let data of customData; let i = index" id="{{i}}">
+                        <h2 class="content_title">{{data.title}}</h2>
+                        <img class="content_img" *ngIf="data.media && data.media != 'undefined'" src="{{data.media}}">
+                        <div class="content_box" #customcontent [innerHtml]="data.description | safe: 'html'"></div>
+                        <!-- container -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="home-no-data" *ngIf="!customData.length">
+            <h4>{{'No Data Found'}}</h4>
+        </div>
+    </div>
+</div>

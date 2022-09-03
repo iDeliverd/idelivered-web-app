@@ -1,0 +1,143 @@
+.input-group {
+  float: none;
+}
+
+.buy-now {
+  float: right;
+  font-size: 12px;
+  border: 2px solid black;
+  padding: 2px 8px;
+  border-radius: 30px;
+  margin-top: -26px;
+  cursor: pointer;
+  background-color: #ffffff00;
+  position: relative;
+  font-weight: 500;
+}
+
+.underline {
+  text-decoration: none;
+  margin-top: 20px;
+  border-bottom: 2px solid #ffff;
+}
+
+.supp-prescription {
+  margin-top: 70px;
+  // margin-bottom: -50px;
+  text-align: right;
+}
+
+.sup-description p {
+  width: 100% !important;
+}
+
+.chat-sup {
+  position: absolute;
+  width: 250px;
+  top: -100px;
+  right: 24px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 115px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+  padding: 3px 33px 27px 3px !important;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(80px);
+  -ms-transform: translateX(80px);
+  transform: translateX(80px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+  padding: 3px 25px 27px 3px !important;
+  font-size: 14px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.detail_banner_img img {
+  object-fit: fill !important;
+}
+
+.rating-image {
+  border-radius: 2px;
+  position: absolute;
+  left: -5px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;    
+  margin-top: -12px;
+  margin-left: 11px;
+}
+
+.rating-heading {
+  top: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.rating-description {
+  margin: 5px 0;
+  font-size: 12px;
+  text-align: justify;
+}
+
+.rating-date {
+  margin-top: 5px;
+  font-size: 12px;
+  text-align: justify;
+}
+
+@media (max-width: 991px){
+  .searchbtn{
+  height:32px
+  }
+}
+

@@ -1,0 +1,78 @@
+.navbar-nav {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+}
+
+a {
+    cursor: pointer;
+}
+
+.topheader-user {
+    img {
+        height: 35px;
+        width: 35px;
+    }
+}
+
+.gift {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    padding: 0px !important;
+}
+// .payment_count {
+//     background-color: #ffffff63;
+//     padding: 2px 10px 2px 11px !important;
+//     border-radius: 5px;
+//     box-shadow: 1px 0px 5px #7777778a;
+// }
+
+.nav-item.active .nav-link {
+    color: var(--primaryColor) !important;
+}
+
+.dropdown-toggle::after {
+    display: inline-block !important;
+    margin-left: 0.255em !important;
+    vertical-align: 0.255em !important;
+    content: "" !important;
+    border-top: 0.3em solid !important;
+    border-right: 0.3em solid transparent !important;
+    border-bottom: 0 !important;
+    border-left: 0.3em solid transparent !important;
+    background-color: unset;
+}
+// a[data-toggle="dropdown"]{
+//     color:#212529!important
+// }
+
+.navbar-nav .nav-link.dropdown-toggle:hover:after {
+    width: auto;
+}
+
+.navbar-nav .nav-link.dropdown-toggle:after {
+    position: relative;
+}
+
+.book_now_button {
+    background: #000000;
+    color: rgb(254, 218, 1);
+    font-size: 17px;
+    line-height: 40px;
+    text-align: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px;
+    transition: 0.3s;
+    border-radius: 4px;
+    border: 2px solid #000000;
+    font-weight: 600;
+}
+
+li.nav-item.d-flex.logged-in:before {
+    content: "";
+    display:none;
+}
+.cart_icon_li {
+    margin-right: 10px !important;
+}

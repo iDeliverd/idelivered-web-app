@@ -1,0 +1,70 @@
+<div class="price_details"
+    *ngIf="loggedIn && settings?.enable_supplier_express_schedule_delivery_provide && viewType==1"
+    [style.background-color]="style.cardBackgroundColor" [style.border-color]="style.secondaryColor">
+    <ul class="list-inline pt-2 self-pickup text-center" *ngIf="time_slots.length; else noSlots">
+        <li class="list-inline-item" *ngIf="is_supplier_express_delivery_provide==1 && !is_express_hide">
+            <button class="btn"
+                [ngStyle]="(slot_obj.selectedDel_type == 1) ? saveBtn : {'color': style.primaryColor, 'backgroundColor': style.cardBackgroundColor, 'borderColor': style.primaryColor}"
+                (click)="onSelectDeliveryType(1)">{{'Express Delivery' | translate}}</button>
+        </li>
+        <li class="list-inline-item">
+            <button class="btn"
+                [ngStyle]="(slot_obj.selectedDel_type == 2) ? saveBtn : {'color': style.primaryColor, 'backgroundColor': style.cardBackgroundColor, 'borderColor': style.primaryColor}"
+                (click)="onSelectDeliveryType(2)">{{'Schedule Delivery' | translate}}</button>
+        </li>
+    </ul>
+    <div class="row p-4" *ngIf="slot_obj.selectedDel_type == 2; else express">
+        <div class="col-md-6 p-1 brdr" *ngFor="let slot of time_slots.slice(0,5)"
+            [ngStyle]="(selectedTimeSlot?.id == slot.id) ? saveBtn : {'color': style.primaryColor, 'backgroundColor': style.cardBackgroundColor, 'borderColor': style.primaryColor}">
+            <p class="taxt"
+                [ngStyle]="(slot_obj?.selectedTimeSlot?.id == slot.id) ? saveBtn : {'color': style.primaryColor}"
+                (click)="chooseSlot(slot)">
+                <small><b>{{slot.day}}</b></small>
+                &nbsp;&nbsp; {{slot.label}}
+            </p>
+        </div>
+    </div>
+    <ng-template #noSlots>
+        <p class="p-4">No time zone or slot assigned to this {{'supplier' | localization | translate}} with this
+            delivery address</p>
+    </ng-template>
+    <div *ngIf="slot_obj.selectedDel_type == 1" #express>
+        <p class="p-4">Your order will be delivered within 2 hours with a delivery fee extra
+            {{settings?.express_delivery_charges}} AED</p>
+    </div>
+</div>
+
+
+
+<div class="col-md-12"
+    *ngIf="settings?.enable_supplier_express_schedule_delivery_provide && viewType==0 && time_slots.length"
+    [style.background-color]="style.cardBackgroundColor" [style.border-color]="style.secondaryColor">
+    <div class="row">
+        <div class="col-md-12 p-1 brdr" *ngFor="let slot of time_slots.slice(0,2)"
+            [ngStyle]="(selectedTimeSlot?.id == slot.id) ? saveBtn : {'color': style.primaryColor, 'backgroundColor': style.cardBackgroundColor, 'borderColor': style.primaryColor}">
+            <div *ngIf="slot.id==5" class="col-md-12 row">
+                <div class="col-md-9 col-12 p-0">
+                    <p class="icons mb-0" [style.color]="style.primaryColor">
+                        <i *ngIf="!is_supplier_express_delivery_provide" class="fa fa-times-circle-o"></i>
+                        <i *ngIf="is_supplier_express_delivery_provide" class="fa fa-check-circle"></i>
+                    </p>
+                    <span class="mt-1 mb-0 slot_head"
+                        [ngStyle]="(slot_obj?.selectedTimeSlot?.id == slot.id) ? saveBtn : {'color': style.primaryColor}">
+                        <span>{{slot.day}}</span>
+                        {{slot.label}}
+                    </span>
+                </div>
+            </div>
+            <div *ngIf="slot.id!=5" class="col-md-12 row">
+                <div class="col-md-12 col-12 p-0 slot_head">
+                    <span class="mr-2">Earliest Schedule Slot:</span>
+                    <span
+                        [ngStyle]="(slot_obj?.selectedTimeSlot?.id == slot.id) ? saveBtn : {'color': style.primaryColor}">
+                        <span>{{slot.day}}</span>
+                        {{slot.label}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

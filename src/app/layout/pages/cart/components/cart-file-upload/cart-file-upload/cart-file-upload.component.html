@@ -1,0 +1,32 @@
+<div class="price_details"
+    [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor }">
+
+    <div class="cart-image-upload">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="add-image image" *ngIf="!loading" (click)="fileInput.click()">
+                    <img src="/assets/images/add.png">
+                    <input #fileInput type="file" accept="audio/wav,audio/mpeg,audio/mp4/*" (change)="onfileSelect($event)">
+                </div>
+                <div class="spinner-imaeg" *ngIf="loading">
+                    <img src="/assets/images/spinner.svg">
+                </div>
+            </div>
+
+            <div class="col-md-3" >
+                <div class="image" *ngFor="let data of file; let i = index;">
+                    <audio [src]="data" class="Audio-tag" controls>
+                                              
+                    </audio>
+                    <i class="remove fa fa-times-circle" (click)="removeImage(i)"></i>
+                </div>
+            </div>
+
+            <div *ngIf="!file.length" class="col-md-9 count">
+                <p [style.color]="style?.baseColor">{{'Select Audio prescription to upload' | translate}}</p>
+            </div>
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,75 @@
+<div class="headerrit" *ngIf="!settings?.isCustomFlow || (settings?.isCustomFlow && settings?.app_type <= 10)">
+  <ul class="new-top-header-right">
+    <li class="nav-item dropdown language-dropdown">
+      <a class="nav-link dropdown-toggle" style="cursor: pointer;"
+        [style.backgroundColor]="style?.footerSecColor || style?.topHeaderBackgroundColor || style?.headerBackgroundColor"
+        data-toggle="dropdown" id="navbarDropdown" [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+        <img *ngIf="!!selectedLang?.icon_code && settings?.hide_flag==0" 
+        [ngStyle] = "{'margin-left':settings?.hide_flag==0 ? '2px' : '','margin-right':settings?.hide_flag==0?'0px':''}" class="headimgfit"
+        [src]="'https://flagicons.lipis.dev/flags/4x3/' + selectedLang?.icon_code + '.svg'">
+        <!-- [src]="'https://www.countryflags.io/' + selectedLang?.icon_code + '/flat/16.png'"> -->
+        <!-- {{selectedLang?.language_code}} -->
+        {{selectedLang?.language_name}} 
+        <span *ngIf="!settings?.remove_language_code">
+          ({{selectedLang?.language_code}})</span>
+        <i class="fa fa-caret-down" aria-hidden="true"></i>
+      </a>
+      <div class="dropdown-menu drop-menu">
+        <div *ngIf="settings?.show_language_in_reverse_order !== 1">
+        <span *ngFor="let lang of langData;trackBy:trackByFn;">
+          <a class="dropdown-item pd pointer alignCountryFlag" (click)="languageSelect(lang)"
+          [style.backgroundColor]="style?.footerSecColor || style?.topHeaderBackgroundColor || style?.headerBackgroundColor"
+          [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+          <img *ngIf="!!selectedLang?.icon_code && settings?.hide_flag==0" [ngStyle]="{'margin-left': settings?.hide_flag==0 ?'10px':''}" class="imgfit"
+      [src]="'https://flagicons.lipis.dev/flags/4x3/' + lang?.icon_code + '.svg'">
+      <!-- [src]="'https://www.countryflags.io/' + lang?.icon_code + '/flat/16.png'"> -->
+            <span [ngStyle] = "{'margin-left':settings?.hide_flag==0 ?'25px':''}">  {{lang?.language_name | translate}}</span>
+        </a>
+      </span>
+        </div>
+        <div *ngIf="settings?.show_language_in_reverse_order == 1"> 
+        <span *ngFor="let lang of reversed_langData;trackBy:trackByFn;">
+          <a class="dropdown-item pd pointer alignCountryFlag" (click)="languageSelect(lang)"
+          [style.backgroundColor]="style?.footerSecColor || style?.topHeaderBackgroundColor || style?.headerBackgroundColor"
+          [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+          <img *ngIf="!!selectedLang?.icon_code && settings?.hide_flag==0" [ngStyle]="{'margin-left': settings?.hide_flag==0 ?'10px':''}" class="imgfit"
+          [src]="'https://flagicons.lipis.dev/flags/4x3/' + lang?.icon_code + '.svg'">
+      <!-- [src]="'https://www.countryflags.io/' + lang?.icon_code + '/flat/16.png'"> -->
+            <span [ngStyle] = "{'margin-left':settings?.hide_flag==0 ?'25px':''}">  {{lang?.language_name | translate}}</span>
+        </a>
+      </span>
+        </div>
+         
+      </div>
+    </li>
+  </ul>
+</div>
+
+
+<ul class="new-top-header-right" *ngIf="settings?.isCustomFlow && settings?.app_type > 10">
+  <h3 [style.color]="style?.topHeaderTextColor || style?.headerTextColor">{{'Language' | translate}}</h3>
+  <li class="nav-item dropdown language-dropdown">
+    <a class="nav-link dropdown-toggle" style="cursor: pointer;"
+      [style.backgroundColor]="style.footerSecColor || style.topHeaderBackgroundColor || style.headerBackgroundColor"
+      data-toggle="dropdown" id="navbarDropdown" [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+      <img *ngIf="!!selectedLang?.icon_code && settings?.hide_flag==0"
+      [src]="'https://flagicons.lipis.dev/flags/4x3/' + selectedLang?.icon_code + '.svg'">
+ <!-- [src]="'https://www.countryflags.io/' + selectedLang?.icon_code + '/flat/16.png'"> -->
+      {{selectedLang?.language_name | translate}}
+      <i [style.color]="style?.topHeaderTextColor || style?.headerTextColor" class="fa fa-caret-down"
+        aria-hidden="true"></i>
+    </a>
+    <div class="dropdown-menu drop-menu">
+      <span *ngFor="let lang of langData;trackBy:trackBylangFn;">
+        <a class="dropdown-item pd cursor" (click)="languageSelect(lang)"
+          [style.backgroundColor]="style.footerSecColor || style.topHeaderBackgroundColor || style.headerBackgroundColor"
+          [style.color]="style?.topHeaderTextColor || style?.headerTextColor">
+          <img *ngIf="!!selectedLang?.icon_code && settings?.hide_flag==0"
+          [src]="'https://flagicons.lipis.dev/flags/4x3/' + lang?.icon_code + '.svg'">
+  <!-- [src]="'https://www.countryflags.io/' + lang?.icon_code + '/flat/16.png'"> -->
+          {{lang?.language_name | translate}}
+        </a>
+      </span>
+    </div>
+  </li>
+</ul>

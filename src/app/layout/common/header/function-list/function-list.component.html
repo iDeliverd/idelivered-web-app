@@ -1,0 +1,392 @@
+<ng-container
+    *ngIf="settings?.app_type == 1 && settings.selected_template == 2 && settings?.is_single_vendor == 1; else default">
+    <button type="button" [ngStyle]="{'color': '#ffffff', 'backgroundColor': style?.primaryColor}" *ngIf="!loggedIn"
+        class="btn btn-1 btn-primary" data-toggle="modal" data-target="#auth" (click)="openAuthModal('LOGIN')">Log
+        in</button>
+    <button type="button" [ngStyle]="{'color': '#ffffff', 'backgroundColor': style?.primaryColor}" *ngIf="!loggedIn"
+        class="btn btn-2 btn-primary" data-toggle="modal" data-target="#auth" (click)="openAuthModal('SIGNUP')">Sign
+        up</button>
+
+    <div class="nav-link" style="display: inline-block;">
+        <li class="nav-item user-profile dropdown" *ngIf="loggedIn">
+            <ng-container [ngTemplateOutlet]="userProfile"></ng-container>
+        </li>
+    </div>
+</ng-container>
+
+<ng-template #default>
+    <ng-container [ngSwitch]="settings.selected_template">
+        <ng-template [ngSwitchCase]="3" *ngIf="settings?.app_type==8">
+            <ul class="navbar-nav mr-auto w-100 justify-content-end">
+                <li class="nav-item" *ngIf="!loggedIn" (mouseleave)="hoverType = ''" (mouseover)="hoverType = 'SIGNUP'">
+                    <a class="nav-link" data-toggle="modal" data-target="#auth" (click)="openAuthModal('SIGNUP')"
+                        style="width: 70px;" [style.color]="style?.headerTextColor">{{'Sign
+                        up' | translate}}</a>
+                </li>
+                <li class="nav-item right-border" *ngIf="!loggedIn" (mouseleave)="hoverType = ''"
+                    (mouseover)="hoverType = 'LOGIN'" style="margin-right: 10px;" [style.margin-right.]>
+                    <a class="nav-link" data-toggle="modal" data-target="#auth" (click)="openAuthModal('LOGIN')"
+                        [style.color]="style?.headerTextColor"
+                        [ngClass]="settings?.enable_knock_theme == 1 ? 'login_brdr' : ''">
+
+                        {{'Login' | translate}}</a>
+                </li>
+
+                <li class="nav-item user-profile dropdown" *ngIf="loggedIn">
+                    <ng-container [ngTemplateOutlet]="userProfileSaned"></ng-container>
+                </li>
+
+                <!-- <li class="nav-item d-flex" [class.logged-in]="loggedIn">
+                  <img src="assets/styles/saned_template/img/language.svg">
+                    <div class="translate">
+                      <div id="google_translate_element">
+                        <div dir="ltr" class="skiptranslate goog-te-gadget">
+                            <div id="google_translate_element"></div>
+                        </div>
+                      <div class="skiptranslate goog-te-gadget" dir="ltr" style=""><div id=":0.targetLanguage"><select class="goog-te-combo" aria-label="Language Translate Widget"><option value="">Select Language</option><option value="af">Afrikaans</option><option value="sq">Albanian</option><option value="am">Amharic</option><option value="ar">Arabic</option><option value="hy">Armenian</option><option value="az">Azerbaijani</option><option value="eu">Basque</option><option value="be">Belarusian</option><option value="bn">Bengali</option><option value="bs">Bosnian</option><option value="bg">Bulgarian</option><option value="ca">Catalan</option><option value="ceb">Cebuano</option><option value="ny">Chichewa</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese (Traditional)</option><option value="co">Corsican</option><option value="hr">Croatian</option><option value="cs">Czech</option><option value="da">Danish</option><option value="nl">Dutch</option><option value="eo">Esperanto</option><option value="et">Estonian</option><option value="tl">Filipino</option><option value="fi">Finnish</option><option value="fr">French</option><option value="fy">Frisian</option><option value="gl">Galician</option><option value="ka">Georgian</option><option value="de">German</option><option value="el">Greek</option><option value="gu">Gujarati</option><option value="ht">Haitian Creole</option><option value="ha">Hausa</option><option value="haw">Hawaiian</option><option value="iw">Hebrew</option><option value="hi">Hindi</option><option value="hmn">Hmong</option><option value="hu">Hungarian</option><option value="is">Icelandic</option><option value="ig">Igbo</option><option value="id">Indonesian</option><option value="ga">Irish</option><option value="it">Italian</option><option value="ja">Japanese</option><option value="jw">Javanese</option><option value="kn">Kannada</option><option value="kk">Kazakh</option><option value="km">Khmer</option><option value="rw">Kinyarwanda</option><option value="ko">Korean</option><option value="ku">Kurdish (Kurmanji)</option><option value="ky">Kyrgyz</option><option value="lo">Lao</option><option value="la">Latin</option><option value="lv">Latvian</option><option value="lt">Lithuanian</option><option value="lb">Luxembourgish</option><option value="mk">Macedonian</option><option value="mg">Malagasy</option><option value="ms">Malay</option><option value="ml">Malayalam</option><option value="mt">Maltese</option><option value="mi">Maori</option><option value="mr">Marathi</option><option value="mn">Mongolian</option><option value="my">Myanmar (Burmese)</option><option value="ne">Nepali</option><option value="no">Norwegian</option><option value="or">Odia (Oriya)</option><option value="ps">Pashto</option><option value="fa">Persian</option><option value="pl">Polish</option><option value="pt">Portuguese</option><option value="pa">Punjabi</option><option value="ro">Romanian</option><option value="ru">Russian</option><option value="sm">Samoan</option><option value="gd">Scots Gaelic</option><option value="sr">Serbian</option><option value="st">Sesotho</option><option value="sn">Shona</option><option value="sd">Sindhi</option><option value="si">Sinhala</option><option value="sk">Slovak</option><option value="sl">Slovenian</option><option value="so">Somali</option><option value="es">Spanish</option><option value="su">Sundanese</option><option value="sw">Swahili</option><option value="sv">Swedish</option><option value="tg">Tajik</option><option value="ta">Tamil</option><option value="tt">Tatar</option><option value="te">Telugu</option><option value="th">Thai</option><option value="tr">Turkish</option><option value="tk">Turkmen</option><option value="uk">Ukrainian</option><option value="ur">Urdu</option><option value="ug">Uyghur</option><option value="uz">Uzbek</option><option value="vi">Vietnamese</option><option value="cy">Welsh</option><option value="xh">Xhosa</option><option value="yi">Yiddish</option><option value="yo">Yoruba</option><option value="zu">Zulu</option></select></div>Powered by <span style="white-space:nowrap"><a class="goog-logo-link" href="https://translate.google.com" target="_blank"><img src="https://www.gstatic.com/images/branding/googlelogo/1x/googlelogo_color_42x16dp.png" width="37px" height="14px" style="padding-right: 3px" alt="Google Translate">Translate</a></span></div></div>
+                      <script>
+                        function googleTranslateElementInit() {
+                          new google.translate.TranslateElement({
+                            pageLanguage: 'en'
+                          }, 'google_translate_element');
+                        }
+                      </script>
+                    </div>
+                  </li> -->
+
+            </ul>
+        </ng-template>
+
+        <ng-template ngSwitchDefault>
+            <ul class="navbar-nav" *ngIf="!showSearchbar">
+
+
+                <li *ngIf="settings?.enable_home_icon_on_header == 1">
+                    <a [style.color]="style?.headerTextColor" [class.disabled]="isNavigating" class="home_icon"
+                        [routerLink]="['/']">
+                        <i class="fa fa-home fa-lg"></i>
+                    </a>
+                </li>
+
+                <li style="float: left; margin-right: 10px;" *ngIf="clientCode == 'scrubble_0566'">
+                    <a href="https://book.scrubble.in" target="_blank" class="book_now_button">BOOK NOW</a>
+                </li>
+
+                <li class="nav-item" *ngIf="settings?.gift_card == 1" style="margin-right: 10px;">
+                    <a class="nav-link" (click)="sideNavToggle.emit(0)" [routerLink]="'/gift-card/list'"
+                        [style.color]="style?.headerTextColor"
+                        [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase'}"
+                        data-toggle="tooltip" [title]="'Gift Cards'">
+                        <i [style.color]="style?.headerTextColor" class="fa fa-gift gift" aria-hidden="true"></i>
+                    </a>
+                </li>
+                <li *ngIf="(settings?.web_custom_domain_theme == 0 || settings?.app_type==8) && (settings?.laundary_service_flow == 1 || settings?.is_laundry_theme=='1' ||
+                (settings?.app_type==2 && settings?.selected_template==2))" style="position: relative;"
+                    class="cart_icon_li">
+                    <app-header-cart [style]="style" [settings]="settings"></app-header-cart>
+                </li>
+
+                <li class="nav-item" *ngIf="!loggedIn && settings?.display_login_signup_menu == 0"
+                    (mouseleave)="hoverType = ''" (mouseover)="hoverType = 'LOGIN'" style="margin-right: 10px;"
+                    [style.margin-right.]>
+                    <a class="nav-link" data-toggle="modal" data-target="#auth" (click)="openAuthModal('LOGIN')"
+                        [style.color]="style?.headerTextColor"
+                        [ngClass]="settings?.enable_knock_theme == 1 ? 'login_brdr' : ''"
+                        [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase'}">
+                        <span
+                            *ngIf="[1,2,3].includes(settings?.selected_template) && settings?.app_type < 11 && !loggedIn && !settings?.enable_wala_theme"
+                            style="margin-right: 12px;">
+                            <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="ic_profile" [attr.stroke]="style?.headerTextColor">
+                                        <g id="ic_profile_active-copy" transform="translate(2.000000, 2.000000)">
+                                            <g id="Oval-+-Rectangle-5-Mask-Copy">
+                                                <path
+                                                    d="M14.8826436,1.27098978 C13.4386023,0.461519712 11.773198,0 10,0 C4.4771525,0 0,4.4771525 0,10 C0,15.5228475 4.4771525,20 10,20 C15.5228475,20 20,15.5228475 20,10 C20,7.80198295 19.2908503,5.76959667 18.088864,4.11915418"
+                                                    id="Path" stroke-linecap="round" stroke-linejoin="round"
+                                                    fill-rule="nonzero">
+                                                </path>
+                                                <g id="Group" transform="translate(2.500000, 5.833333)">
+                                                    <circle id="Oval" cx="7.5" cy="4.16666667" r="4.16666667"></circle>
+                                                    <path
+                                                        d="M0.867657182,11.7088984 C2.01422412,9.69296079 4.18166639,8.33333333 6.66666667,8.33333333 L8.33333333,8.33333333 C10.7927296,8.33333333 12.941078,9.66508747 14.0965777,11.6467949"
+                                                        id="Rectangle-5" stroke-linecap="round" stroke-linejoin="round">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </span>
+                        {{'Login' | translate}}</a>
+                </li>
+
+                <span class="slash-forlogin" [style.color]="style?.headerTextColor"
+                    *ngIf="[1,2,3].includes(settings?.selected_template) && settings?.app_type < 11 && !loggedIn && !settings?.enable_wala_theme"
+                    style="margin-right: 10px; font-weight: 500;">/</span>
+
+                <li class="nav-item mr-0" *ngIf="!loggedIn && settings?.display_login_signup_menu == 0"
+                    (mouseleave)="hoverType = ''" (mouseover)="hoverType = 'SIGNUP'"
+                    [ngClass]="!loggedIn && settings?.enable_coming_soon_flow == 1 ? 'disabled' : ''">
+                    <a class="nav-link" data-toggle="modal" data-target="#auth" (click)="openAuthModal('SIGNUP')"
+                        [style.color]="style?.headerTextColor"
+                        [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase','width':'84px'}">{{'Sign
+                        up' | translate}}</a>
+                </li>
+                <!-- //&& settings?.app_type == 2 -->
+                <li class="nav-item dropdown"
+                    *ngIf="loggedIn && (settings.is_supplier_wishlist == 1 || settings?.is_product_wishlist == 1) && settings?.app_type < 11"
+                    (mouseleave)=" hoverType=''" (mouseover)=" hoverType='FAVOURITE'">
+                    <!-- <a class=" nav-link"><img src="/assets/images/ic_wishlist_icon.png"></a> -->
+                    <a class="nav-link" data-toggle="dropdown">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <g id="Page-1" stroke="none" stroke-width="2" fill="none" fill-rule="evenodd">
+                                <g id="Group-4" transform="translate(2.000000, 3.000000)"
+                                    [attr.stroke]="style.headerTextColor">
+                                    <g id="ic_heart_fill">
+                                        <path
+                                            d="M10,18 L1.71572875,9.84452689 C-0.571909584,7.59245518 -0.571909584,3.9411255 1.71572875,1.68905378 C4.00336709,-0.563017928 7.71236166,-0.563017928 10,1.68905378 C12.2876383,-0.563017928 15.9966329,-0.563017928 18.2842712,1.68905378 C20.5719096,3.9411255 20.5719096,7.59245518 18.2842712,9.84452689 L10,18 Z"
+                                            id="Combined-Shape-Copy"></path>
+                                    </g>
+                                </g>
+                            </g>
+                        </svg>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li *ngIf="settings.is_product_wishlist == 1" class="pl-2"><a [style.color]="style.baseColor"
+                                [class.disabled]="isNavigating" [routerLink]="['/products/wishlist']"
+                                (click)="sideNavToggle.emit(0)">{{'products' | localization}}</a></li>
+                        <li *ngIf="settings.is_supplier_wishlist == 1" class="pl-2"><a [style.color]="style.baseColor"
+                                [class.disabled]="isNavigating" [routerLink]="['/supplier/supplier-list']"
+                                [queryParams]="{favourites: 1}" (click)="sideNavToggle.emit(0)">
+                                {{'suppliers' | localization}}</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- <li class=" nav-item responsiveSearch">
+                                <i class="fa fa-search" aria-hidden="true" (click)="changeSearchBar()"></i>
+                        </li> -->
+                <li *ngIf="loggedIn && settings?.show_wallet_on_home == 1" class="">
+                    <a [style.color]="style?.headerTextColor" class="nav-link payment_count"
+                        routerLink="/account/my-wallet" [style.color]="style?.headerTextColor">
+                        <i class="fa fa-money mr-2"></i>{{userWalletBalance.toFixed(2)}}
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown ml-4" style="margin-right:10px;"
+                    *ngIf="settings?.enable_agent_signup_web == 1"
+                    [ngClass]="!loggedIn && settings?.enable_coming_soon_flow == 1 ? 'disabled' : ''">
+
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" [style.color]="style?.headerTextColor"
+                        [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase'}">
+                        {{'Menu' | translate}}
+                        <!-- type="button" -->
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <ul>
+                            <li class="nav-item"
+                                *ngIf="settings?.enable_agent_signup_web == 1 && settings?.is_vendor_registration == 1"
+                                routerLinkActive='active' (mouseleave)="hoverType = ''"
+                                (mouseover)="hoverType = 'SIGNUP'">
+                                <a class="nav-link" [routerLink]="'/vendor-signup'"
+                                    [style.color]="style?.headerTextColor"
+                                    [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase', 'width': '180px'}">
+                                    {{'Become A Vendor' | translate}}</a>
+                            </li>
+
+                            <li class="nav-item" *ngIf="settings?.enable_agent_signup_web == 1"
+                                routerLinkActive='active' (mouseleave)="hoverType = ''"
+                                (mouseover)="hoverType = 'SIGNUP'">
+                                <a class="nav-link" [routerLink]="'/agent-signup'"
+                                    [style.color]="style?.headerTextColor"
+                                    [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase', 'width': '165px'}">
+                                    {{'Become A Driver' | translate}}</a>
+                            </li>
+
+                            <li class="nav-item"
+                                *ngIf="settings?.enable_agent_signup_web == 1 && settings?.hide_agent_signup_web_about_us == 1"
+                                routerLinkActive='active' (mouseleave)="hoverType = ''"
+                                (mouseover)="hoverType = 'SIGNUP'">
+                                <a class="nav-link" [routerLink]="['/about']" [style.color]="style?.headerTextColor"
+                                    [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase', 'width': '165px'}">
+                                    {{'about_us' | localization | translate}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+
+                <li class="nav-item dropdown ml-4" style="margin-right:10px;"
+                    *ngIf="!loggedIn && settings?.display_login_signup_menu == 1">
+
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" [style.color]="style?.headerTextColor"
+                        [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase'}">
+                        <!-- {{'Menu' | translate}} -->
+                        <!-- type="button" -->
+
+                        <span
+                            style="margin-right: 12px;">
+                            <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1"
+                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <g id="Page-1" stroke="none" stroke-width="2" fill="none" fill-rule="evenodd">
+                                    <g id="ic_profile" [attr.stroke]="style?.headerTextColor">
+                                        <g id="ic_profile_active-copy" transform="translate(2.000000, 2.000000)">
+                                            <g id="Oval-+-Rectangle-5-Mask-Copy">
+                                                <path
+                                                    d="M14.8826436,1.27098978 C13.4386023,0.461519712 11.773198,0 10,0 C4.4771525,0 0,4.4771525 0,10 C0,15.5228475 4.4771525,20 10,20 C15.5228475,20 20,15.5228475 20,10 C20,7.80198295 19.2908503,5.76959667 18.088864,4.11915418"
+                                                    id="Path" stroke-linecap="round" stroke-linejoin="round"
+                                                    fill-rule="nonzero">
+                                                </path>
+                                                <g id="Group" transform="translate(2.500000, 5.833333)">
+                                                    <circle id="Oval" cx="7.5" cy="4.16666667" r="4.16666667"></circle>
+                                                    <path
+                                                        d="M0.867657182,11.7088984 C2.01422412,9.69296079 4.18166639,8.33333333 6.66666667,8.33333333 L8.33333333,8.33333333 C10.7927296,8.33333333 12.941078,9.66508747 14.0965777,11.6467949"
+                                                        id="Rectangle-5" stroke-linecap="round" stroke-linejoin="round">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </span>
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu"
+                        [style.background-color]="settings?.app_type == 7 ? '#4A4A4A' : is_dark ?  style.backgroundColor : style?.headerBackgroundColor || style.backgroundColor">
+                        <ul style="padding-left: 0;">
+                            <li class="nav-item" routerLinkActive='active' (mouseleave)="hoverType = ''"
+                                (mouseover)="hoverType = 'LOGIN'">
+                                <a class="nav-link" data-toggle="modal" data-target="#auth"
+                                    (click)="openAuthModal('LOGIN')" [style.color]="style?.headerTextColor"
+                                    [ngClass]="settings?.enable_knock_theme == 1 ? 'login_brdr' : ''"
+                                    [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase'}">
+                                    {{'Login' | translate}}</a>
+                            </li>
+
+                            <li class="nav-item" routerLinkActive='active' (mouseleave)="hoverType = ''"
+                                (mouseover)="hoverType = 'SIGNUP'">
+
+                                <a class="nav-link" data-toggle="modal" data-target="#auth"
+                                    (click)="openAuthModal('SIGNUP')" [style.color]="style?.headerTextColor"
+                                    [ngStyle]="settings?.header_theme == 1 ? {'fontWeight': '500'} : {'textTransform': 'uppercase','width':'84px'}">
+                                    {{'Sign up' | translate}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="nav-item user-profile dropdown" *ngIf="loggedIn">
+                    <ng-container [ngTemplateOutlet]="userProfile"></ng-container>
+                </li>
+                <li class="nav-item dropdown ml-4" *ngIf="settings.is_multicurrency_enable">
+                    <app-currency [style]="style" [settings]="settings"></app-currency>
+                </li>
+
+                <li class="nav-item dropdown ml-4" *ngIf="settings?.display_language_menu_function == 1 && settings.secondary_language != '0'">
+                    <app-language class="inline-block" [style]="style"
+                    [settings]="settings"></app-language>
+                </li>
+
+            </ul>
+        </ng-template>
+    </ng-container>
+</ng-template>
+
+
+
+<ng-template #userProfile>
+    <a class="nav-link text-center" data-toggle="dropdown"
+        [ngClass]="settings?.header_theme == 1 ? 'topheader-user' : ''">
+        <img [src]="userData?.user_image ? userData?.user_image : '/assets/images/placeholder-user.png'" alt="user"
+            onError="src = './assets/images/placeholder_image.svg'"></a>
+    <div>
+        <ul class="dropdown-menu">
+            <li>
+                <div class="profile-detail">
+                    <div class="profile-image-home">
+                        <img class="profile-menu-image"
+                            [src]="userData?.user_image ? userData?.user_image : '/assets/images/placeholder-user.png'"
+                            onError="src = './assets/images/placeholder_image.svg'">
+                    </div>
+                    <h3 [style.color]="style?.defaultColor">{{userData?.firstname}}</h3>
+                    <h4 [style.color]="style?.secondaryColor">{{userData?.email}}</h4>
+                </div>
+            </li>
+            <li><a [style.color]="style?.defaultColor" (click)="sideNavToggle.emit(0)"
+                    [routerLink]="['/account/profile']">{{'My Account' | translate}}
+                    <span>></span></a></li>
+            <li><a [style.color]="style?.defaultColor" (click)="sideNavToggle.emit(0)"
+                    [routerLink]="['/orders/order-listing']">{{('My ' + ('orders' | localization: settings?.app_type:
+                    1)) | translate}}
+                    <span>></span></a></li>
+            <li *ngIf="settings?.show_prescription_requests == 1"><a [style.color]="style?.defaultColor"
+                    (click)="sideNavToggle.emit(0)" [routerLink]="['/orders/order-request']">
+                    {{'orders' | localization}} Requests
+                    <span>></span></a></li>
+            <li *ngIf="settings?.is_survey_monkey_allow=='1'"><a [style.color]="style?.defaultColor"
+                    (click)="surveyMonkey()">{{'Survey' | translate}}
+                </a></li>
+            <li><a [style.color]="style?.defaultColor" (click)="signOutConfirmation()">{{'Sign Out' | translate}}
+                </a></li>
+        </ul>
+
+    </div>
+</ng-template>
+
+<ng-template #userProfileSaned>
+    <a class="nav-link text-center" data-toggle="dropdown"
+        [ngClass]="settings?.header_theme == 1 ? 'topheader-user' : ''">
+        <img [src]="userData?.user_image ? userData?.user_image : '/assets/images/placeholder-user.png'" alt="user"
+            onError="src = './assets/images/placeholder_image.svg'"></a>
+    <div>
+        <ul class="dropdown-menu">
+            <li>
+                <div class="profile-detail" style="display: flex;flex-direction: column;">
+                    <div class="profile-image-home d-flex justify-content-center" [ngStyle]="{'height': settings?.change_radious_of_profile_image ? '45px':''}">
+                        <img class="profile-menu-image"
+                            [src]="userData?.user_image ? userData?.user_image : '/assets/images/placeholder-user.png'"
+                            onError="src = './assets/images/placeholder_image.svg'">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <h3 [style.color]="style?.defaultColor">{{userData?.firstname}}</h3>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <h4 [style.color]="style?.defaultColor" style="line-height:2">{{userData?.email}}</h4>
+                    </div>
+
+
+                </div>
+                <hr>
+            </li>
+            <li><a [style.color]="style?.defaultColor" (click)="sideNavToggle.emit(0)"
+                    [ngStyle]="{'margin-left':inArabicPosition ? '80px':'0px'}"
+                    [routerLink]="['/account/profile']">{{'My Account' | translate}}
+                    <span>></span></a></li>
+            <li><a [style.color]="style?.defaultColor" (click)="sideNavToggle.emit(0)"
+                    [ngStyle]="{'margin-left':inArabicPosition ? '80px':'0px'}"
+                    [routerLink]="['/orders/order-listing']">{{('My ' + ('orders' | localization: settings?.app_type:
+                    1)) | translate}}
+                    <span>></span></a></li>
+            <li *ngIf="settings?.show_prescription_requests == 1"><a [style.color]="style?.defaultColor"
+                    (click)="sideNavToggle.emit(0)" [routerLink]="['/orders/order-request']">
+                    {{'orders' | localization}} Requests
+                    <span>></span></a></li>
+            <li *ngIf="settings?.is_survey_monkey_allow=='1'"><a [style.color]="style?.defaultColor"
+                    (click)="surveyMonkey()">{{'Survey' | translate}}
+                </a></li>
+            <li><a [style.color]="style?.defaultColor" (click)="signOutConfirmation()"
+                    [ngStyle]="{'margin-left':inArabicPosition ? '110px':'0px'}">
+                    {{'Sign Out' | translate}}
+                </a></li>
+        </ul>
+
+    </div>
+</ng-template>
+
+<app-sm-feedback *ngIf="showFeedback" (onFeedbackClose)="onFeedbackClose($event)"></app-sm-feedback>

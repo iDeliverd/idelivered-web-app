@@ -1,0 +1,61 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="1">
+    </ng-template>
+    <ng-template [ngSwitchCase]="2">
+
+        <ng-container [ngSwitch]="showCase">
+
+            <ng-template [ngSwitchCase]="1">
+                <div class="container-fluid pt-5 mb-5 mt-5">
+                    <section class="row sub_section">
+                        <div class="col-md-6">
+                            <img src="../../../../../assets/images/new-home-svc/img-12.jpeg"
+                                class="find_by_img sub_section_img ml-5">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="container app_dl_outer">
+                                <div class="col-md-12 text-center app_dl_inner">
+                                    <h2 class="app_dl_head">Download the app!</h2>
+                                    <h5 class="app_dl_sub_head">Book your next appointment anywhere, anytime</h5>
+                                </div>
+                            </div>
+                            <p class="app_ic_img text-center">
+                                <a *ngIf="appLink?.ios" target="_blank" [href]="appLink?.ios">
+                                    <img src="../../../../../assets/images/new-home-svc/Apple-btn.png"
+                                        class="img-fluid">
+                                </a>
+                                <a *ngIf="appLink?.android" target="_blank" [href]="appLink?.android">
+                                    <img src="../../../../../assets/images/new-home-svc/google-btn.png"
+                                        class="img-fluid">
+                                </a>
+                            </p>
+                        </div>
+                    </section>
+                </div>
+            </ng-template>
+
+            <ng-template [ngSwitchCase]="2">
+                <div class="container-fluid full-bg m-0 mb-4">
+                    <div class="container p-0">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8">
+                                <p class="paragraph">
+                                    Are You a Beauty or wellness Professional?<br />
+                                    List Your Services on Wala!
+                                </p>
+                            </div>
+                            <div class="col-lg-4 col-md-4 text-right mt-5">
+                                <a target="_blank" [href]="registrationUrl" class="btn btn-custom-yellow get_strt">
+                                    {{'Get Started'}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+        </ng-container>
+
+    </ng-template>
+</ng-container>

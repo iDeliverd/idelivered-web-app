@@ -1,0 +1,24 @@
+.brdr .taxt {
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 0px 5px 0px;
+    border: 2px solid;
+}
+.icons {
+    position: absolute;
+    right: 60px;
+    font-size: 21px !important;
+    top: 3px;
+}
+
+@media screen and (max-width: 600px) {
+    .icons {
+        right: 85px;
+        width: 0% !important;
+        top: -2px;
+    }
+    .slot_head {
+        font-size: 12px !important;
+    }
+}

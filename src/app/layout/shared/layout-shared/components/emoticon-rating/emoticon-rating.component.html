@@ -1,0 +1,15 @@
+<!-- <p class="emoji">
+    <i *ngIf="rating >= 9" class="material-icons">sentiment_very_satisfied</i>
+    <i *ngIf="rating >= 7 && rating < 9" class="material-icons">sentiment_satisfied_alt</i>
+    <i *ngIf="rating > 5 && rating < 7" class="material-icons">sentiment_satisfied</i>
+    <i *ngIf="rating == 5" class="material-icons">sentiment_neutral</i>
+    <i *ngIf="rating >= 3 && rating < 5" class="material-icons">sentiment_dissatisfied</i>
+    <i *ngIf="rating < 3" class="material-icons">sentiment_very_dissatisfied</i>
+</p> -->
+
+<p class="emoji">
+    <i *ngIf="rating >= 8 && rating < 10"><img src="/assets/images/emoji/top_emoji.png"> - Amazing</i>
+    <i *ngIf="rating >= 5 && rating < 8"><img src="/assets/images/emoji/middle_emoji.png"> - Great</i>
+    <i *ngIf="rating < 5"><img src="/assets/images/emoji/lower_emoji.png"> - Good</i>
+    
+</p>

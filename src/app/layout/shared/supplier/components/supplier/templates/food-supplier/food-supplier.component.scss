@@ -1,0 +1,26 @@
+.sponser {
+    position: absolute;
+    top: 0px;
+    opacity: 1;
+    background: red;
+    left: 16px;
+    color: #fff;
+}
+.cafe-Restaurants-img .fit_img {
+    width: 100%;
+    border-radius: 4px;
+    height: 122px;
+    object-fit: fill !important;
+}
+.cafe-Restaurants-img .fit_img_mob {
+    width: 100%;
+    border-radius: 4px;
+    height: 285px;
+    object-fit: fill !important;
+}
+.ellipsis {
+    max-width: 140px;
+}
+.cafe-Restaurants-title div {
+    display: inline-block;;
+}

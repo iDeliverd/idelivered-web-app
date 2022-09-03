@@ -1,0 +1,35 @@
+<div id="auth" #auth class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog mt-5" style="max-width: 700px;">
+        <div class="modal-content p-0">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" #closeModal (click)="close()"></button>
+            </div>
+            <div class="modal-body p-0">
+                <vg-player>
+                    <vg-controls>
+                        <vg-play-pause></vg-play-pause>
+                        <vg-playback-button></vg-playback-button>
+
+                        <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
+
+                        <vg-scrub-bar>
+                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                        </vg-scrub-bar>
+
+                        <vg-time-display vgProperty="total" vgFormat="mm:ss"></vg-time-display>
+
+                        <vg-mute></vg-mute>
+                        <vg-volume></vg-volume>
+
+                        <vg-fullscreen></vg-fullscreen>
+                    </vg-controls>
+
+                    <video #media [vgMedia]="media" id="singleVideo" preload="auto" crossorigin>
+                        <source [src]="videoUrl" type="video/mp4">
+                    </video>
+                </vg-player>
+            </div>
+        </div>
+    </div>
+</div>

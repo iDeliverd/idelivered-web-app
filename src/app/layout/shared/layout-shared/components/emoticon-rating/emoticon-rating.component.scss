@@ -1,0 +1,18 @@
+.emoji 
+{   
+    margin-bottom: 0 !important;
+
+    i {
+        //background-color: #a6d5fa;
+        border-radius: 50%;
+        font-size: 15px;
+        vertical-align: middle;
+        margin: 0;
+        color: var(--primaryColor);
+        font-style: normal;
+       
+    }
+    img{
+        height: 25px;
+    }
+}

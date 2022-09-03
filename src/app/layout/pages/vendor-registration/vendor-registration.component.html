@@ -1,0 +1,218 @@
+<!--=======================================nav-bar===================-->
+<section class="form-section outer-section">
+    <div class="container">
+        <div class="row col-md-12 pt-4">
+            <div class="col-md-6">
+                <div class="form_txt">
+                    <h1>BECOME A <span>VENDOR</span></h1>
+                    <!-- <h5>Be your own Boss and make serious Cash</h5> -->
+                    <p>Give your business a boost by joining our community where you will be discovered by millions of
+                        people shopping online.</p>
+                    <h2>How it Works</h2>
+                    <ul>
+                        <li><i class="fa fa-check" aria-hidden="true"></i><strong>List your business with us</strong>
+                        </li>
+                        <li>Create an account with us and increase your visibility</li>
+
+                        <li><i class="fa fa-check" aria-hidden="true"></i><strong> Read and adhere to the terms and
+                                conditions</strong></li>
+                        <li>Understand our policies and abide by the {{siteName}} code of conduct</li>
+
+                        <li><i class="fa fa-check" aria-hidden="true"></i><strong>Fulfill orders</strong></li>
+                        <li>We pride ourselves in offering reliable and fast services to our clients.</li>
+
+                        <li><i class="fa fa-check" aria-hidden="true"></i><strong> Pickup and delivery </strong></li>
+                        <li>Once you have fulfilled your orders, a delivery person will come to pick them up and deliver
+                            them to your clients.</li>
+                    </ul>
+                    <h2>Why Sell with Us</h2>
+                    <ul>
+                        <li><i class="fa fa-check" aria-hidden="true"></i><strong> We uphold culture</strong></li>
+                        <li>Our sole focus is on business. You can trust that your clients will be people who know the
+                            value and authenticity of what you have to offer. </li>
+
+                        <li><i class="fa fa-check" aria-hidden="true"></i><strong> We give an exemplary shopping
+                                experience</strong></li>
+                        <li>We know how hard it can get for shoppers to find ethnic meals and groceries.
+                            Our aim is to make these items freshly available and easily accessible to them by providing
+                            same-day delivery
+                        </li>
+
+                        <li><i class="fa fa-check" aria-hidden="true"></i><strong> We will boost your business </strong>
+                        </li>
+                        <li>With the millions of people shopping at {{siteName}}, your business will be better
+                            positioned thus increasing your customer base. This will greatly help boost your sales.
+                        </li>
+
+                        <li><i class="fa fa-check" aria-hidden="true"></i><strong> We are committed </strong></li>
+                        <li>Our team comprises people seeking to support each other in business. Partnering with us will
+                            give you a great opportunity of joining this community.
+                            We value your business as much as you do.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 img-right">
+                <img src="/assets/images/car1.png">
+                <div class="contact">
+                    <div class="form-area">
+                        <div class="contact-h">{{'PARTNER WITH US' | translate}}</div>
+                        <p>{{'FILL FORM' | translate}}</p>
+                        <form [formGroup]="agentForm" (ngSubmit)="onSubmit()" autocomplete="off">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="group form-group">
+                                        <input type="text" class="form-control" id="firstName"
+                                            formControlName="firstName" placeholder="{{'FIRST NAME'|translate}}">
+                                        <div *ngIf="submitted && form.firstName.errors"
+                                            class="alert alert-danger error">
+                                            <div *ngIf="form.firstName.errors">
+                                                {{'Please enter firstname' | translate}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" id="lastName" formControlName="lastName"
+                                        placeholder="{{'LAST NAME'|translate}}">
+                                    <div *ngIf="submitted && form.lastName.errors" class="alert alert-danger error">
+                                        <div *ngIf="form.lastName.errors">
+                                            {{'Please enter lastname' | translate}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group form-group">
+                                <input type="email" class="form-control" formControlName="email"
+                                    placeholder="{{'Email address'|translate}}">
+                                <div *ngIf="submitted && form.email.errors" class="alert alert-danger error">
+                                    <div *ngIf="form.email.errors.required">{{'Please enter email' | translate}}</div>
+                                    <div *ngIf="form.email.errors.email">{{'Please enter valid email' | translate}}</div>
+                                </div>
+                            </div>
+
+                            <div class="group form-group mobile_number mb-5"
+                                [ngClass]="settings?.disable_phone_flag_selection == 1 ? 'disable_phn_flag' : ''">
+                                <div class="phone_num">
+                                    <!-- <div *ngIf="!settings?.cutom_country_code"> -->
+                                    <ngx-intl-tel-input [selectedCountryISO]="countryISO"
+                                        [preferredCountries]="preferredCountries" (focus)="submitted= false"
+                                        [searchCountryFlag]="true" placeholder="Phone Number"
+                                        [enableAutoCountrySelect]="false" [enablePlaceholder]="true"
+                                        [separateDialCode]="true" [phoneValidation]="true"
+                                        formControlName="phone_number">
+                                    </ngx-intl-tel-input>
+
+                                    <div *ngIf="submitted && form.phone_number?.errors"
+                                        class="alert alert-danger error">
+                                        <div *ngIf="form.phone_number?.errors.required">
+                                            {{'Please enter Phone Number.' | translate}}</div>
+                                        <div *ngIf="!form.phone_number?.errors.required && form.phone_number?.invalid">
+                                            {{'Please Enter a Valid Phone Number.' | translate}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="group form-group">
+                                <input type="text" class="form-control" formControlName="addressLineFirst"
+                                    appGoogleplace [settings]="settings" (onSelect)="address($event)"
+                                    placeholder="{{'complete_address' | localization | translate}}">
+                                <span class="bar"></span>
+
+                                <div class="alert alert-danger error"
+                                    *ngIf="form['addressLineFirst'].errors?.required && submitted">
+                                    {{'Please enter address' | translate}}</div>
+                                <div class="alert alert-danger error"
+                                    *ngIf="!form['addressLineFirst'].errors?.required && form['latitude'].errors?.required && submitted">
+                                    {{'Please enter valid address' | translate}}</div>
+                            </div>
+
+                            <div class="form-group group" *ngIf="settings?.enable_town_in_address">
+                                <input type="text" class="form-control" formControlName="city"
+                                    placeholder="{{'Town/City' | translate}}">
+                                <div *ngIf="submitted && form.city.errors" class="alert alert-danger error">
+                                    <div *ngIf="form.city.errors.required">{{'Please enter city' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group group" *ngIf="settings?.enable_state_in_address">
+                                <input type="text" class="form-control" formControlName="state"
+                                    placeholder="{{'State' | translate}}">
+                                <div *ngIf="submitted && form.state.errors" class="alert alert-danger error">
+                                    <div *ngIf="form.state.errors.required">{{'Please enter state' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="form-group group" *ngIf="settings?.enable_pincode_in_address">
+                                <input type="text" class="form-control" formControlName="pincode"
+                                    placeholder="{{'Postal Code' | translate}}">
+                                <div *ngIf="submitted && form.pincode.errors" class="alert alert-danger error">
+                                    <div *ngIf="form.pincode.errors.required">{{'Please enter pincode' | translate}}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="group form-group m-b">
+                                <p-accordion>
+                                    <ng-container *ngFor="let cat of categories">
+                                        <p-accordionTab header="{{cat?.name}}">
+                                            <ul *ngIf="cat?.sub_category?.length;else selectParent">
+                                                <li *ngFor="let subCat of cat?.sub_category"
+                                                    [ngClass]="{'active' : selectedSubCategory.includes(subCat?.id)}">
+                                                    <label
+                                                        *ngIf="(!subCat?.sub_category || !subCat?.sub_category.length)"
+                                                        class="lable">
+                                                        <input type="checkbox" class="radio-design"
+                                                            [checked]="subCat.checked"
+                                                            (click)="cat.checked = true; checkSubCategory(subCat, cat)">&nbsp;{{subCat?.name}}
+                                                    </label>
+                                                    <div *ngIf="subCat?.sub_category && subCat?.sub_category.length">
+                                                        <p-accordion>
+                                                            <p-accordionTab header="{{subCat?.name}}">
+                                                                <ul>
+                                                                    <li *ngFor="let detailSubCat of subCat?.sub_category"
+                                                                        [ngClass]="{'active' : selectedSubCategory.includes(detailSubCat?.id)}">
+                                                                        <label
+                                                                            *ngIf="(!detailSubCat?.sub_category || !detailSubCat?.sub_category.length)"><input
+                                                                                type="checkbox" class="radio-design"
+                                                                                [checked]="selectedSubCategory.includes(detailSubCat?.id)"
+                                                                                (click)="selectSubCategory(detailSubCat?.id,cat?.id)">&nbsp;{{detailSubCat?.name}}
+                                                                        </label>
+                                                                    </li>
+                                                                </ul>
+                                                            </p-accordionTab>
+                                                        </p-accordion>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            <ng-template #selectParent>
+                                                <label class="lable">
+                                                    <input type="checkbox" class="radio-design" [checked]="cat.checked"
+                                                        (click)="selectMainCat(cat)">&nbsp;
+                                                    {{cat?.name | translate}}
+                                                </label>
+                                            </ng-template>
+                                            <hr class="m-t-5">
+                                        </p-accordionTab>
+                                    </ng-container>
+                                </p-accordion>
+                            </div>
+
+                            <p class="font-12">
+                                {{'By clicking submit button' | translate }}, {{'you agree to our' | translate }}
+                                <a [style.color]="style.primaryColor" [routerLink]="['/terms-and-conditions']">
+                                    {{'terms_and_conditions' | localization | translate}}
+                                </a> and
+                                <a [style.color]="style.primaryColor" [routerLink]="['/privacy-policy']">
+                                    {{'privacy_policy' | localization | translate}}
+                                </a>,
+
+                                {{'and you agree that' | translate }} {{siteName}}
+                                <span translate="v_key"></span>
+                            </p>
+                            <button type="submit" id="submit" name="submit" class="btn btn-primary col-md-12">
+                                {{'SUBMIT' | translate}}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

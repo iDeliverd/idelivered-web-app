@@ -1,0 +1,97 @@
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal"  data-target="#payment_method"
+    data-whatever="@getbootstrap">Open modal for @getbootstrap</button> -->
+
+<!-- <div class="modal fade" id="payment_method" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true"> -->
+<div class="dialog-model">
+    <div class="dialog-content">
+        <div class="container">
+            <div class="dialog-header" style="padding-bottom:15px;">
+                <h5>Payment Information</h5>
+                <a href="javascript:void(0)" class="dialog-close-button m_cross" (click)="close()">&times;</a>
+            </div>
+            <!-- <div class="modal-body"> -->
+            <form [formGroup]="paymentInformation" (ngSubmit)="onSubmit()">
+                <!-- <div class="form-group">
+                        <label for="mobile-number" class="col-form-label">Mobile Number:</label>
+                        <input type="text" maxlength="10" class="form-control" id="mobile-number" disabled  formControlName="cnumber">
+                    </div> -->
+                <!-- <div class="form-group">
+                    <label for="Details" class="col-form-label">Details:</label>
+                    <input type="text" formControlName="details" class="form-control"  id="Details">
+                </div> -->
+                <div class="form-group">
+                    <label for="Customer Name" class="col-form-label">Customer Name:</label>
+                    <input type="text"  class="form-control" id="Customer" formControlName="cname"
+                        [ngClass]="{ 'is-invalid': submitted && f.cname.errors }">
+                    <div *ngIf="submitted && f.cname.errors" class="invalid-feedback">
+                        <div *ngIf="f.cname.errors.required">Customer Name is required</div>
+
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="Payment Method" class="col-form-label">Payment Method:</label>
+                    <div class="form-row">
+                        <div class="col p-0">
+                            <div class="pay-box" [ngClass]="{ 'is-invalid': submitted && selectedPaymentMethod == '' }">
+                                <a   (click)= "getPaymentmethodValue('momo','63510')"><img src="assets/images/mtn payment.png" width="60px"></a>
+                                <a  (click)= "getPaymentmethodValue('momo','63514')"><img src="assets/images/airtel-tigo.png" width="60px"></a>
+                                <a  (click)= "getPaymentmethodValue('cc','')"><img src="assets/images/visa-microwave.jpeg" width="60px"></a>
+                            </div>
+                            <div *ngIf="submitted && selectedPaymentMethod==''" class="invalid-feedback">
+                                <div>payment method  is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="selectedPaymentMethod == 'cc'">
+                    <label for="Bank ID" class="col-form-label">Bank ID:</label>
+                    <select class="form-control" formControlName="bankid"
+                        [ngClass]="{ 'is-invalid': submitted && f.bankid.errors }">
+                        <option value="000"> VISA -
+                            MASTERCARD CARDS </option>
+                         <option value="010"> INVESTMENT AND MORTGAGE BANK</option>
+                            <option value="070"> GUARANTY TRUST BANK (RWANDA) GTBANK RWANDA </option>
+                            <option value="100"> ECOBANK RWANDA ECOBANK </option> 
+                            <option value="115"> ACCESS RWANDA ACCESS</option>
+                            <option value="130"> COMPAGNIE GENERALE DE BANQUES COGEBANQUE </option>
+                            <option value="145"> URWEGO OPPORTUNITY BANK UOB </option>
+                            <option value="160"> KENYA COMMERCIAL BANK KCB RWANDA </option>
+                            <option value="192"> EQUITY BANK EQUITY </option> 
+                            <option value="400"> BANQUE POPULAIRE DU RWANDA BPR </option>
+                            <option value="750"> BANQUE RWANDAISE DE DEVELOPEMENT BRD </option> 
+                            <option value="800"> ZIGAMA CREDIT AND SAVINGS SCHEME ZIGAMA</option>
+                            <option value="900"> BANK OF AFRICA RWANDA BOA RWANDA </option>
+                            <option value="950"> UNGUKA BANK UNGUKA </option> 
+                             <option value="040"> BANQUE DE KIGALI BK </option>
+                        <option value="951"> BANQUE NATIONALE DU RWANDA BNR </option> 
+                        
+                    </select>
+                    <div *ngIf="submitted && f.bankid.errors" class="invalid-feedback">
+                        <div *ngIf="f.bankid.errors.required">Bank Id is required</div>
+                    </div>
+                </div>
+
+                <div *ngIf="selectedPaymentMethod == 'momo'" class="form-group">
+                    <label for="mobile-number" class="col-form-label">MTN Mobile Number:</label>
+                    <ngx-intl-tel-input [selectedCountryISO]="countryISO" [preferredCountries]="preferredCountries"
+                        (focus)="submitted= false" [searchCountryFlag]="true" placeholder="Phone Number"
+                        [enableAutoCountrySelect]="false" [enablePlaceholder]="true" name="phone"
+                        [separateDialCode]="true" [phoneValidation]="true" formControlName="msisdn" [ngClass]="{ 'is-invalid': submitted && f.msisdn.errors }">
+                    </ngx-intl-tel-input>
+                    <div *ngIf="submitted && f.msisdn.errors" class="invalid-feedback">
+                        <div *ngIf="f.msisdn.errors.required">Mobile Number is required</div>
+                        <!-- <div *ngIf="f.msisdn.errors.pattern">Please, enter valid mobile number.</div> -->
+                    </div>
+                </div>
+
+
+                <button type="button" (click)="onSubmit()" class="btn btn-primary">Submit</button>
+
+                <button type="button" *ngIf="CompleteOrder" (click)= "completeOrder()" style="margin: 10px;" class="btn btn-primary">CompleteOrder</button>
+            </form>
+            
+        </div>
+    </div>
+</div>

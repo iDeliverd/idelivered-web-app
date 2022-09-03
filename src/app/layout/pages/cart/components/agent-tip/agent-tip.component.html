@@ -1,0 +1,106 @@
+<div class="price_details"
+    [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor }">
+
+    <div class="tips">
+        <div class="top">
+            <div class="right" *ngIf="total_tip">
+                <p [style.color]="style?.baseColor"><span
+                        *ngIf="settings?.show_currency_after_amount == 0">{{currency}}</span>{{total_tip | number :
+                            settings?.addon_decimal_value}}<span
+                        *ngIf="settings?.show_currency_after_amount == 1"> {{currency}}</span></p>
+                <a [style.color]="style?.primaryColor" *ngIf="!settings?.enable_custom_agent_tip"
+                    (click)="removeTip()">{{'Clear' | translate}}</a>
+            </div>
+            <h3 [style.color]="style?.baseColor">{{'Add a' | translate}} {{'tip' | localization | translate}} {{'for your' | translate}} {{'Agent' | localization | translate}}?
+            </h3>
+            <small [style.color]="style?.baseColor">{{'The entire amount will be transferred to the' | translate}}
+                {{'Agent' | localization}}</small>
+        </div>
+
+        <ul>
+            <li [ngStyle]="selectedTip == tip ? {'color': '#ffffff', 'background-color': style?.primaryColor, 'border-color': style?.primaryColor } : {'color': style?.primaryColor, 'border-color': style?.primaryColor }"
+                *ngFor="let tip of tips;trackBy:trackByAfternoonFn" (click)="addTip(tip)">
+                <span *ngIf="settings?.agentTipPercentage == 0">+ <span
+                        *ngIf="settings?.show_currency_after_amount == 0" style="float: none !important;">{{currency}}</span>{{tip | number :
+                            settings?.addon_decimal_value}}<span
+                        *ngIf="settings?.show_currency_after_amount == 1">{{currency}}</span></span>
+                <span *ngIf="settings?.agentTipPercentage == 1">
+                    {{tip}}%<br />
+                    <small *ngIf="settings?.enable_custom_agent_tip">
+                        <span
+                            *ngIf="settings?.show_currency_after_amount == 0">{{currency}}</span>&nbsp;{{calculateAmountPers(tip)}}<span
+                            *ngIf="settings?.show_currency_after_amount == 1"> {{currency}}</span>
+                    </small>
+                </span>
+            </li>
+        </ul>
+
+        <div *ngIf="settings?.agentTipPercentage == 1 && !settings?.enable_custom_agent_tip" class="tip-percent">
+            <div class="or">OR</div>
+
+            <div class="input-group">
+                <input type="text" class="form-control" appAmount [appInputMaxLength]="6" placeholder="Enter Tip"
+                    [(ngModel)]="total_tip" (blur)="customTipChange($event)">
+                <div class="input-group-append">
+                    <span class="input-group-text cursor"
+                        [ngStyle]="{'color': '#ffffff', 'background-color': style?.primaryColor, 'border-color': style?.primaryColor }"
+                        (click)="addCustomTip()" id="basic-addon2">Add {{'tip' | localization}}</span>
+                </div>
+                <p *ngIf="minTipError" style="color: red;width: 100%;"><small>Minimum tip amount should be
+                        <span *ngIf="settings?.show_currency_after_amount == 0">{{currency}}</span>
+                        {{settings?.custom_agent_tip_min_value}} <span
+                            *ngIf="settings?.show_currency_after_amount == 1">{{currency}}</span></small>
+                </p>
+            </div>
+        </div>
+
+
+
+
+
+
+        <!-- Modal start-->
+        <div *ngIf="settings?.enable_custom_agent_tip" class="tip-percent">
+            <button type="button" class="btn" data-toggle="modal" data-target="#exampleModalCenter"
+                [ngStyle]="{'color': '#ffffff', 'margin':'5px 0px 0px 20px', 'background-color': style?.primaryColor, 'border-color': style?.primaryColor }">
+                Custom {{'tip' | localization}}
+            </button>
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            </button>
+                            <h4 [ngStyle]="{'text-align': 'center'}">How much would you like to tip <br> your driver ?
+                            </h4>
+                            <div class="form-group">
+                                <input type="text" class="form-control" appAmount [appInputMaxLength]="6"
+                                    placeholder="Enter Tip" [(ngModel)]="total_tip" (blur)="customTipChange($event)">
+                                <p *ngIf="minTipError" style="color: red;width: 100%;"><small>Minimum tip amount should
+                                        be
+                                        {{currency}} {{settings?.custom_agent_tip_min_value}}</small>
+                                </p>
+                                <div class="input-group-append mt-3">
+                                    <span class="input-group-text cursor"
+                                        [ngStyle]="{'color': '#ffffff', 'background-color': style?.primaryColor, 'border-color': style?.primaryColor ,'width':'175px' }"
+                                        (click)="addCustomTipFromDialog()" id="basic-addon2"
+                                        class="btn btn-secondary">Add
+                                        {{'tip'
+                                        | localization}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+</div>

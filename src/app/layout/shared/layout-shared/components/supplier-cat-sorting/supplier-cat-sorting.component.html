@@ -1,0 +1,27 @@
+<div class="dropdown show cat-srt"  *ngIf="settings?.selected_template!=4">
+    <button class="btn btn-large dropdown-toggle mob" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false" [style.color]="style.primaryColor" [ngStyle]="settings?.set_filter_button_to_center == 1 ? {'font-size': '25px'} : ''">
+        <span [style.color]="style.primaryColor">{{labelText | translate}}:</span>
+        {{selectedCatSorting | translate}}</button>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <a class="dropdown-item cursor" *ngIf="settings?.is_pickup_order != 1 && !is_hide_delivery"
+            [ngStyle]="catSortValue == 0 ? {'background-color': style.primaryColor, color: '#ffffff'} : {'background-color': '#ffffff', color: style.primaryColor}"
+            (click)="onCatSortBy(0)">
+            <div *ngIf ="settings?.app_type != 8">{{'Delivery' | translate}}</div>
+            <div *ngIf ="settings?.app_type == 8">{{'Home Services' | translate}}</div>
+        </a>
+        <a class="dropdown-item cursor" *ngIf="settings?.is_pickup_order != 0  && !is_hide_pickup"
+            [ngStyle]="catSortValue == 1 ? {'background-color': style.primaryColor, color: '#ffffff'} : {'background-color': '#ffffff', color: style.primaryColor}"
+            (click)="onCatSortBy(1)">
+            <div *ngIf ="settings?.app_type != 8">{{'selfpickup' | localization | translate}}</div>
+            <div *ngIf ="settings?.app_type == 8">{{'On Salon' | translate}}</div>
+        </a>
+        <a class="dropdown-item cursor" *ngIf="settings?.app_type == 8"
+            [ngStyle]="catSortValue == 2 ? {'background-color': style.primaryColor, color: '#ffffff'} : {'background-color': '#ffffff', color: style.primaryColor}"
+            (click)="onCatSortBy(2)">{{'All' | translate}}</a>
+        <a class="dropdown-item cursor" *ngIf="settings?.is_table_booking == 1  && !is_hide_dinin"
+            [ngStyle]="catSortValue == 2 ? {'background-color': style.primaryColor, color: '#ffffff'} : {'background-color': '#ffffff', color: style.primaryColor}"
+            (click)="onCatSortBy(2)">{{'dining_table' | localization | translate}}</a>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+.video_item {
+    padding-right: 30px;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+    .video_item {
+        padding-right: 0px;
+    }
+}

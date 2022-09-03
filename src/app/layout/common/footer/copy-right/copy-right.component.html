@@ -1,0 +1,27 @@
+<div class="footer-bottom text-center row m-0"
+    [ngStyle]="{'background-color':style.footerSecColor, color: style.footerTextColor}">
+    <div class="col-md-2 ml-2">
+        <div class="copy_rght_logo pt-1 pt-1 ml-4" *ngIf="settings?.enable_logo_in_copy_right_section" [ngClass]="[settings?.fix_header_logo_dimensions ? 'footer_logo_middle_align' : '']">
+            <app-logo [width]="'auto'" [size]="'380x150'" [height]="50" [logoColor]="style.primaryColor"
+                [logoPadding]="24" [logoRadius]="10">
+            </app-logo>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <p class="mb-0 copy_rt">
+            <b>{{copyRightText}}</b>
+        </p>
+    </div>
+</div>
+
+<div class="floating_whatsapp" *ngIf="settings?.enable_whatsapp_floating_chat==1">
+    <div *ngIf="showWhatsappMsg" class="whats_App_contant">
+        <p>
+            {{whataAppFloatingContant}}
+        </p>
+        <button class="chat_now" (click)="onWhatsApp()">{{'Chat now' | translate}}</button>
+    </div>
+    <span (click)="showWhatsappContant()">
+        <i class="fa fa-whatsapp"></i>
+    </span>
+</div>

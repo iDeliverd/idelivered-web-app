@@ -1,0 +1,440 @@
+<ng-container *ngIf="is_mobile && settings?.disable_mobile_footer == 0; else webTemplate">
+    <app-mobile-footer [style]="style" [settings]="settings"></app-mobile-footer>
+
+    <div class="use-mobile-sectiont mobile_apps_footer"
+        *ngIf="settings?.enable_apps_link_in_mobile_footer && (appLink?.android || appLink?.ios)">
+        <ng-container *ngIf="is_mobile; then webTemplate">
+        </ng-container>
+    </div>
+    <div *ngIf="settings?.show_cookie_policy">
+        <ng-container *ngIf="is_cookies_accepted; else cookies_section">
+        </ng-container>
+    </div>
+
+</ng-container>
+
+<ng-template #webTemplate>
+    <div [style.background-color]="style?.footerColor" *ngIf="(!settings?.enable_wala_theme) &&
+     (([0].includes(settings?.selected_template) || (settings?.selected_template == 2 && settings?.app_type != 1)) ||
+         settings?.app_type > 10 || settings?.app_type == 8); else template_selection">
+        <ng-container *ngIf="settings.footer_type == 0; else landingFooter">
+            <ng-container [ngSwitch]="settings?.selected_template">
+                <ng-template [ngSwitchCase]="3" *ngIf="settings?.app_type == 8">
+                    <section class="download-apps">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 downloadapp text-center">
+                                    <h3>{{'Download App' | translate}}</h3>
+                                </div>
+                                <div class="col-md-6">
+                                    <a *ngIf="appLink?.android" target="_blank" [href]="appLink?.android"><img
+                                            src="assets/styles/saned_template/img/google-play.png" width="180px"
+                                            alt="google_play"></a>
+                                    <a *ngIf="appLink?.ios" class="margin-req" target="_blank"
+                                        [href]="appLink?.ios"><img src="assets/styles/saned_template/img/app-store.png"
+                                            width="180px" alt="app_store"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="saned-footer">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <div class="social-icon text-center " *ngIf="settings?.social_media_icons == 1">
+                                        <ul>
+                                            <li><a><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                            <li><a><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                            <li><a><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                                            <li><a><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="our-links text-center">
+                                        <ul>
+                                            <li *ngIf="settings?.aboutUs">
+                                                <a [style.color]="style.footerColor"
+                                                    [routerLink]="['/about']">{{'about_us' | localization |
+                                                    translate}}</a>
+                                            </li>
+                                            <!-- <li *ngIf="settings?.blog"><a [style.color]="style.footerColor"  [routerLink]="['/about']">{{'Blog' | translate}}</a></li>
+                                            <li><a [style.color]="style.footerColor"  [routerLink]="['/about']">{{'Careers' | translate}}</a></li> -->
+                                            <li><a [style.color]="style.footerColor"
+                                                    *ngIf="contact?.email && settings.email" (click)="onContact()">
+                                                    {{'Contact Us'| translate}}</a></li>
+                                            <li><a [style.color]="style.footerColor"
+                                                    *ngIf="contact?.email && settings.email" (click)="onHelp()">
+                                                    {{'Help'| translate}}</a></li>
+                                            <li *ngIf="settings?.privacyPolicy">
+                                                <a [style.color]="style.footerColor"
+                                                    [routerLink]="['/privacy-policy']">{{'privacy_policy' |
+                                                    localization |
+                                                    translate}}</a>
+                                            </li>
+                                            <li *ngIf="settings?.termsAndConditions"><a
+                                                    [style.color]="style.footerColor"
+                                                    [routerLink]="['/terms-and-conditions']">{{'terms_and_conditions'
+                                                    | localization | translate}}</a>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <app-copy-right [settings]="settings" [style]="style" [contact]="contact"></app-copy-right>
+
+                    </footer>
+                </ng-template>
+                <ng-template ngSwitchDefault>
+
+                    <footer *ngIf="!settings?.enable_custom_footer_home_service">
+                        <div class="footer-part">
+                            <div class="container"
+                                [ngClass]="!loggedIn && settings?.enable_coming_soon_flow == 1 ? 'disabled' : ''">
+                                <div class="row">
+                                    <div [ngClass]="!appLink?.android && !appLink?.ios ? 'col-md-6' : 'col-md-4 d_flex'"
+                                        *ngIf="settings?.aboutUs || settings?.termsAndConditions || settings?.privacyPolicy ||settings?.faqs || settings?.enable_custom_pages || settings?.show_cancellation_and_refund_policy || settings?.show_cookie_policy || settings?.enable_adding_multiplefields_in_web">
+                                        <div class="useful-links">
+                                            <h1 style="font-size: 20px;" [style.color]="style.footerTextColor">
+                                                {{'Useful Links' | translate}}</h1>
+                                            <ul *ngIf="settings?.enable_custom_pages == 0">
+                                                <li *ngIf="settings?.aboutUs">
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/about']">{{'about_us' | localization |
+                                                        translate}}</a>
+                                                </li>
+                                                <li *ngIf="settings?.termsAndConditions && settings?.hide_default_terms == 0">
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/terms-and-conditions']">{{'terms_and_conditions'
+                                                        |
+                                                        localization | translate}}</a>
+                                                </li>
+                                                <!-- settings?.termsAndConditions &&  -->
+                                                <li *ngIf="settings?.enable_separate_terms_user_supplier == 1">
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/user-terms-and-conditions']">{{'terms_and_conditions'
+                                                        |
+                                                        localization | translate}}</a>
+                                                </li>
+                                                <li *ngIf="settings?.privacyPolicy">
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/privacy-policy']">{{'privacy_policy' |
+                                                        localization |
+                                                        translate}}</a>
+                                                </li>
+                                                <li *ngIf="settings?.faqs">
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/faq']">{{'faq' |
+                                                        localization | translate}}</a>
+                                                </li>
+                                                <li *ngIf="settings?.show_cancellation_and_refund_policy">
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/cancellation_and_refund']">Cancellation and
+                                                        Refund Policy</a>
+                                                </li>
+                                                <li *ngIf="settings?.show_cookie_policy">
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/cookie_policy']">Cookie Policy</a>
+                                                </li>
+                                                <li *ngIf="settings?.enable_adding_multiplefields_in_web">
+                                                    <div *ngFor="let fieldData of additionalFieldData; let i = index;">
+                                                        <a [style.color]="style.footerTextColor"
+                                                            [routerLink]="['/custom_page', i+1]">{{fieldData?.heading?.english}}</a>
+                                                    </div>
+                                                </li>
+                                                <li *ngIf="settings?.is_vendor_registration == 1">
+                                                    <a *ngIf="settings?.enable_vendor_reg_via_link == 0" 
+                                                        [style.color]="style.footerTextColor"
+                                                        [routerLink]="'/vendor-signup'">{{'Register As' | translate}}
+                                                        {{'supplier' | localization | translate}}
+                                                    </a>
+                                                    <a *ngIf="settings?.enable_vendor_reg_via_link == 1" 
+                                                    [style.color]="style?.footerTextColor" target="_blank"
+                                                    [href]="registrationUrl">{{'Register As' | translate}}
+                                                        {{'supplier' | localization | translate}}</a>                             
+                                                </li>
+                                                <li *ngIf="client_code === 'scrubble_0566'"
+                                                    [routerLink]="['/cleaning-services-in-hyderabad']">
+                                                    <a [style.color]="style.footerTextColor" class="cursor">Customize
+                                                        Your
+                                                        Requirement</a>
+                                                </li>
+                                            </ul>
+
+
+                                            <ul *ngIf="settings?.enable_custom_pages == 1">
+                                                <li style="pointer-events: auto;">
+                                                    <a [style.color]="style.footerTextColor" target="_blank"
+                                                        href="https://www.kabibi-app.com/">{{'about_us' | localization |
+                                                        translate}}</a>
+                                                </li>
+                                                <li style="pointer-events: auto;">
+                                                    <a [style.color]="style.footerTextColor" target="_blank"
+                                                        href="https://www.kabibi-app.com/faq/">{{'how_it_works' |
+                                                        localization |
+                                                        translate}}</a>
+                                                </li>
+                                                <li>
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/terms-and-conditions']">{{'terms_and_conditions'
+                                                        |
+                                                        localization | translate}}</a>
+                                                </li>
+                                                <li>
+                                                    <a [style.color]="style.footerTextColor"
+                                                        [routerLink]="['/privacy-policy']">{{'privacy_policy' |
+                                                        localization |
+                                                        translate}}</a>
+                                                </li>
+                                                <li style="pointer-events: auto;">
+                                                    <a [style.color]="style.footerTextColor" target="_blank"
+                                                        href="https://www.kabibi-app.com/faq/">{{'faq' | localization |
+                                                        translate}}</a>
+                                                </li>
+
+                                                <li *ngIf="client_code === 'scrubble_0566'"
+                                                    [routerLink]="['/cleaning-services-in-hyderabad']">
+                                                    <a [style.color]="style.footerTextColor" class="cursor">Customize
+                                                        Your
+                                                        Requirement</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div
+                                        [ngClass]="(!appLink?.android && !appLink?.ios) || (!settings?.aboutUs && !settings?.termsAndConditions && !settings?.privacyPolicy && !settings?.faqs) ? 'col-md-4 d_flex' : 'col-md-2'">
+                                        <div class="useful-links">
+                                            <h2 [style.color]="style.footerTextColor">{{'Contact Us' | translate}}</h2>
+                                            <ul>
+                                                <li *ngIf="settings?.hide_contact_details == 0" class="help"><a
+                                                        [style.color]="style.footerTextColor"
+                                                        href="tel:{{contact?.phoneNumber}}">{{contact?.phoneNumber}}</a>
+                                                </li>
+                                                <li class="help" *ngIf="contact?.whatsAppNumber && settings?.enable_whatsapp_contact_us && 
+                                            settings?.hide_contact_details == 0">
+                                                <a [style.color]="style.footerTextColor"
+                                                        (click)="onWhatsApp()">
+                                                    <img src="/assets/social-icons/whatsapp.png" width="20px"
+                                                        style="margin-bottom: 0px;"> &nbsp;
+                                                    {{contact?.whatsAppNumber}}</a>
+                                                </li>
+                                                <li [style.color]="style.footerTextColor" class="help"
+                                                    (click)="mailTo()">
+                                                    {{contact?.email}}</li>
+                                                <li *ngIf="settings?.hide_contact_details == 0"
+                                                    [style.color]="style.footerTextColor">{{contact?.country}}</li>
+                                                <li *ngIf="contact?.email && settings.email" class="help"
+                                                    (click)="onHelp()" [style.color]="style.footerTextColor">
+                                                    {{'Help & Support' | translate}}</li>
+
+                                                <li style="margin-top: 20px;" *ngIf="client_code === 'serve_0541'">
+                                                    <img appImage [url]="settings?.site_logo" [size]="'180x80'"
+                                                        [src]="settings?.site_logo" [noCrop]="true" alt="logo"
+                                                        [settings]="settings"
+                                                        style="object-fit: contain; width: 160px;">
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                    <div [ngClass]="settings?.allow_dynamic_image_on_fotter === '1' ? 'col-md-7 mt-4' : 'col-md-7'"
+                                        *ngIf="settings?.allow_dynamic_image_on_fotter === '1'">
+                                        <div class="use-mobile-sectiont m-left"
+                                            *ngIf=" (appLink?.android || appLink?.ios)">
+                                            <div class="post-img">
+                                                <img src="{{settings?.footer_ad_image}}" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        [ngClass]="settings?.aboutUs || settings?.termsAndConditions || settings?.privacyPolicy ||settings?.faqs ? 'col-md-4' : 'col-md-2'">
+                                        <div class="use-mobile-sectiont" *ngIf=" (appLink?.android || appLink?.ios)">
+                                            <h2 [style.color]="style.footerTextColor">{{'Download Our Apps' |
+                                                translate}}</h2>
+                                            <div class="app-images mobile_apps_imgs">
+                                                <a *ngIf="appLink?.android" target="_blank" [href]="appLink?.android">
+                                                    <img src="{{lang_data.language_code != 'es' ? '/assets/images/google_play.png' : '/assets/images/google-play-badge-es.png'}}" alt="google_play">
+                                                </a>
+                                                <a *ngIf="appLink?.ios" target="_blank" [href]="appLink?.ios">
+                                                    <img src="{{lang_data.language_code != 'es' ? '/assets/images/app_store.png' : '/assets/images/App_Store_Badge_es.png'}}" alt="app_store">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="useful-links social" *ngIf="settings?.social_media_icons == 1"
+                                            [ngClass]="settings?.social_media_icons_horizontally_aligned == 1 ? 'div_social_logo_align' : ''">
+                                            <h2 [style.color]="style.footerTextColor"
+                                                [ngClass]="settings?.social_media_icons_horizontally_aligned == 1 ? 'heading_social_logo' : ''">
+                                                Follow Us on</h2>
+                                            <ul
+                                                [ngClass]="settings?.social_media_icons_horizontally_aligned == 1 ? 'ul_social_logo_align' : ''">
+                                                <li><a *ngIf="settings?.fackbook_link"
+                                                        [style.color]="style.primaryColor" target="_blank"
+                                                        [href]="settings?.fackbook_link"><i class="fa fa-facebook"
+                                                            aria-hidden="true"></i>
+                                                    </a></li>
+                                                <li><a *ngIf="settings?.twitter_link" [style.color]="style.primaryColor"
+                                                        target="_blank" [href]="settings?.twitter_link"><i
+                                                            class="fa fa-twitter" aria-hidden="true"></i>
+                                                    </a></li>
+                                                <li><a *ngIf="settings?.instagram_link"
+                                                        [style.color]="style.primaryColor" target="_blank"
+                                                        [href]="settings?.instagram_link"><i class="fa fa-instagram"
+                                                            aria-hidden="true"></i>
+                                                    </a></li>
+                                                <li><a *ngIf="settings?.linkedin_link"
+                                                        [style.color]="style.primaryColor" target="_blank"
+                                                        [href]="settings?.linkedin_link"><i class="fa fa-linkedin"
+                                                            aria-hidden="true"></i>
+                                                    </a></li>
+                                                <li><a *ngIf="settings?.google_link" [style.color]="style.primaryColor"
+                                                        target="_blank" [href]="settings?.google_link"><i
+                                                            class="fa fa-google-plus" aria-hidden="true"></i>
+                                                    </a></li>
+                                                <li><a *ngIf="settings?.youtube_link && settings?.social_media_icons_horizontally_aligned == 1"
+                                                        [style.color]="style.primaryColor" target="_blank"
+                                                        [href]="settings?.youtube_link"><i class="fa fa-youtube-play"
+                                                            aria-hidden="true"></i>
+                                                    </a></li>
+                                                <li><a *ngIf="settings?.blog_link && settings?.social_media_icons_horizontally_aligned == 1"
+                                                        [style.color]="style.primaryColor" target="_blank"
+                                                        [href]="settings?.blog_link"><img
+                                                            src="/assets/social-icons/blog.jpg" class="image_blog">
+                                                    </a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+
+                    <app-copy-right [settings]="settings" [style]="style" [contact]="contact"></app-copy-right>
+
+                    <div *ngIf="settings?.show_cookie_policy">
+                        <ng-container *ngIf="is_cookies_accepted; else cookies_section">
+                        </ng-container>
+                    </div>
+
+
+
+                </ng-template>
+            </ng-container>
+
+
+
+
+            <ng-container *ngIf="settings?.enable_custom_footer_home_service">
+                <section class="bg-white1">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6 footer-txt1">
+                                <h3>Get the TOPHAND APP now!</h3>
+                                <h6>Avail 20% off on your first booking.</h6>
+                                <p>Book and manage a range of home cleaning and maintenance services through
+                                    our app.</p>
+                                <a *ngIf="appLink?.android" target="_blank" [href]="appLink?.android"><img
+                                        src="/assets/images/google_play.png" width="120px"></a>
+                                <a *ngIf="appLink?.ios" target="_blank" [href]="appLink?.ios"><img
+                                        src="/assets/images/app_store.png" width="120px"></a>
+                            </div>
+                            <div class="col-sm-6 wdt">
+                                <img src="../../../../assets/images/mobile.png">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <footer class="footer1">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-4 foot-txt1">
+                                <h3>Contact Us :</h3>
+                                <p>PHONE</p>
+                                <a href="tel:{{contact?.phoneNumber}}">{{contact?.phoneNumber}}</a>
+                                <p>EMAIL</p>
+                                <a (click)="mailTo()">
+                                    {{contact?.email}}</a>
+                            </div>
+                            <div class="col-sm-4 foot-txt1">
+                                <h3 *ngIf="settings?.termsAndConditions"><a
+                                        [routerLink]="['/terms-and-conditions']">Terms</a></h3>
+                                <h3 *ngIf="settings?.privacyPolicy">
+                                    <a [routerLink]="['/privacy-policy']">Privacy</a>
+                                </h3>
+                                <h3><a *ngIf="contact?.email && settings.email" class="help" (click)="onHelp()">
+                                        {{'Help & Support' | translate}}</a></h3>
+                            </div>
+                            <div class="useful-links social col-sm-4 foot-txt1"
+                                *ngIf="settings?.social_media_icons == 1">
+                                <h3><a>Follow Us on</a></h3>
+                                <ul>
+                                    <li><a *ngIf="settings?.fackbook_link" [style.color]="style.primaryColor"
+                                            target="_blank" [href]="settings?.fackbook_link"><i class="fa fa-facebook"
+                                                aria-hidden="true"></i>
+                                        </a></li>
+                                    <li><a *ngIf="settings?.twitter_link" [style.color]="style.primaryColor"
+                                            target="_blank" [href]="settings?.twitter_link"><i class="fa fa-twitter"
+                                                aria-hidden="true"></i>
+                                        </a></li>
+                                    <li><a *ngIf="settings?.instagram_link" [style.color]="style.primaryColor"
+                                            target="_blank" [href]="settings?.instagram_link"><i class="fa fa-instagram"
+                                                aria-hidden="true"></i>
+                                        </a></li>
+                                    <li><a *ngIf="settings?.linkedin_link" [style.color]="style.primaryColor"
+                                            target="_blank" [href]="settings?.linkedin_link"><i class="fa fa-linkedin"
+                                                aria-hidden="true"></i>
+                                        </a></li>
+                                    <li><a *ngIf="settings?.google_link" [style.color]="style.primaryColor"
+                                            target="_blank" [href]="settings?.google_link"><i class="fa fa-google-plus"
+                                                aria-hidden="true"></i>
+                                        </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </ng-container>
+        </ng-container>
+        <ng-template #landingFooter>
+            <app-landing-footer [style]="style" [settings]="settings" (onHelp)="onHelp()" (onContact)='onContact()'>
+            </app-landing-footer>
+        </ng-template>
+    </div>
+
+</ng-template>
+
+<ng-template #template_selection>
+    <ng-container [ngSwitch]="settings?.app_type">
+
+        <ng-template [ngSwitchCase]="1">
+            <app-food-footer [settings]="settings" [style]="style"></app-food-footer>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="2">
+            <app-ecommerce-footer [settings]="settings" [style]="style"></app-ecommerce-footer>
+        </ng-template>
+
+        <ng-template [ngSwitchCase]="8">
+            <app-home-service-footer [settings]="settings" [style]="style"></app-home-service-footer>
+        </ng-template>
+
+    </ng-container>
+</ng-template>
+
+
+<ng-template #cookies_section>
+    <div class="cookies_policy">
+        <div class="row" [ngStyle]="{'background-color':style.footerSecColor}">
+            <div class="col-md-9">
+                <p class="cookies_text">
+                    {{cookies_policy_contant}}
+                </p>
+            </div>
+            <div class="col-md-3 text-center">
+                <button class="cookie_btn" (click)="acceptRejectCookies('accept')">{{'ACCEPT COOKIES'}}</button>
+            </div>
+
+        </div>
+    </div>
+</ng-template>

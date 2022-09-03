@@ -1,0 +1,326 @@
+@font-face {
+    font-family: 'gilroy-bolduploaded_file';
+    src: url('./font/gilroy-bold.woff2') format('woff2'), url('./font/gilroy-bold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'gilroy-heavyuploaded_file';
+    src: url('./font/gilroy-heavy.woff2') format('woff2'), url('./font/gilroy-heavy.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'gilroy-lightuploaded_file';
+    src: url('./font/gilroy-light.woff2') format('woff2'), url('./font/gilroy-light.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.btn-no-bg {
+    font-family: 'Gilroy';
+    color: #2B2D32;
+    font-size: 16px;
+    line-height: normal;
+    border: 1px solid transparent;
+}
+
+a:hover {
+    transition: all 0.5s ease;
+}
+
+.btn-no-bg:hover {
+    border: 1px solid rgb(236 29 36 / 5%);
+    background-color: rgb(236 29 36 / 4%);
+}
+
+.btn-no-bg img {
+    padding-right: 5px;
+}
+
+.banner-slide {
+    background-image: url(images/banner.png);
+    background-repeat: no-repeat;
+    min-height: 500px;
+    background-size: cover;
+}
+
+.white {
+    color: #fff;
+    ;
+}
+
+h1 {
+    font-family: 'Gilroy';
+    font-size: 48px;
+}
+
+h2 {
+    font-family: 'Gilroy';
+    font-size: 32px;
+    margin: 0px;
+    padding: 0px;
+}
+
+h6 {
+    font-family: 'Gilroy';
+    font-size: 20px;
+}
+
+p {
+    color: #2B2D32;
+    font-size: 14px;
+    font-family: 'Gilroy';
+}
+
+h6 {
+    color: #2B2D32;
+    font-size: 16px;
+    font-family: 'Gilroy';
+    margin: 0px;
+}
+
+span.red {
+    color: #EC1D24;
+}
+
+.search-bar {
+    position: relative;
+    top: -21px;
+}
+
+.search-bar .form-control {
+    line-height: 64px;
+    border-radius: 8px;
+    background-color: white;
+    font-family: 'Gilroy';
+    padding: 30px 20px 30px 50px;
+    border: none;
+    box-shadow: 0px 3px 15px rgb(0 0 0 / 16%);
+}
+
+.search-bar .form-group img {
+    position: absolute;
+    left: 38px;
+    top: 17px;
+}
+
+h5 {
+    color: #2B2D32;
+    font-size: 15px;
+    font-family: 'Gilroy';
+    margin: 0px;
+}
+
+h4 {
+    color: #2B2D32;
+    font-size: 18px;
+    font-family: 'Gilroy';
+    margin: 0px;
+}
+
+a.swiper-slide h5 {
+    color: #2B2D32;
+    text-align: center;
+    padding-top: 10px;
+    margin: 0px;
+}
+
+a.swiper-slide {
+    cursor: pointer;
+    text-decoration: none;
+    opacity: 1;
+}
+
+a:hover.swiper-slide h5 {
+    color: #EC1D24;
+    transition: all 0.5s ease;
+}
+
+a:hover.swiper-slide img {
+    opacity: 0.5;
+    transition: all 0.5s ease;
+}
+
+.swiper-slide {
+    width: 205px!important;
+    height: 200px!important;
+}
+
+.swiper-container {
+    padding: 10px 0px 80px 0px!important;
+}
+
+.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction {
+    width: auto!important;
+    right: 0!important;
+    left: auto!important;
+    bottom: -6px!important;
+}
+
+.swiper-pagination-bullet {
+    width: 20px!important;
+    height: 4px!important;
+    display: inline-block;
+    border-radius: 0px!important;
+    background: #000;
+    opacity: .2;
+}
+
+section.vendor {
+    background-color: #EFF0F0;
+    padding: 50px 0px;
+}
+
+
+
+a.btn-red {
+    background-color: #EC1D24;
+    color: #fff;
+    padding: 6px 20px;
+    border: 2px solid transparent;
+}
+
+a:hover.btn-red {
+    background-color: #fff;
+    color: #EC1D24;
+    padding: 6px 20px;
+    border: 2px solid #EC1D24;
+}
+
+.near-you {
+    background-color: #EFF0F0;
+    padding: 50px 0px;
+}
+
+.red-outline {
+    border: solid 1px #EC1D24;
+    color: #EC1D24;
+}
+
+.card {
+    background-color: #fff;
+    border: solid 1px #E9E9E9;
+}
+
+.card-info {
+    padding: 15px;
+    width: 70%;
+}
+
+.card-info h5 {
+    white-space: nowrap;
+    /* width: 100px; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.light-text {
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+.dark-text {
+    font-size: 14px;
+}
+
+.w-20 {
+    width: 90px;
+}
+
+.width-70 {
+    width: 70%;
+}
+
+.width-30 {
+    width: 30%;
+}
+
+.p-15 {
+    padding: 15px;
+}
+
+a.rating-btn {
+    background-color: #EC1D24;
+    padding: 2px 6px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+a.rating-btn span {
+    font-size: 13px;
+}
+
+a.cart {
+    color: #2B2D32;
+    font-size: 14px;
+    font-family: 'Gilroy';
+    cursor: pointer;
+}
+
+.card-img {
+    padding: 5px;
+}
+
+.footer {
+    padding: 50px 0px;
+}
+
+.footer ul {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+
+.footer ul li a {
+    color: #2B2D32;
+    /* opacity: 0.7; */
+    font-size: 14px;
+    font-family: 'Gilroy';
+}
+
+.footer ul li {
+    color: #2B2D32;
+    opacity: 0.7;
+    font-size: 14px;
+    font-family: 'Gilroy';
+    line-height: 34px;
+}
+
+.footer ul li img {
+    padding-right: 8px;
+}
+
+.copyright {
+    background: #2B2D32;
+    padding: 13px 0px;
+    text-align: center;
+    font-size: 13px;
+    font-family: 'Gilroy';
+    color: #fff;
+}
+
+.slide_track_width .slick-track {
+    width: 100% !important;
+}
+
+.cafe-Restaurants-title {
+    border: 0;
+}
+
+.cafe-Restaurants-delivery {
+    border-top: 2px solid #e9e9e975;
+}
+
+.cafe-Restaurants-img img {
+    padding: 10px;
+}

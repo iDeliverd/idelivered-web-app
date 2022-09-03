@@ -1,0 +1,1692 @@
+<ng-container *ngIf="!isLoading; else skeleton">
+  <div *ngIf="!isAddItems">
+    <!--================ Start Page Breadcrumb Page ================-->
+    <div class="page_breadcrumb" [style.background-color]="style.backgroundColor">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <ul>
+              <li><a href="javascript:void(0)" [routerLink]="['/account/profile']" [style.color]="style.baseColor"
+                  @fade>{{'My Account' | translate}}</a>
+              </li>
+              <li><a href="javascript:void(0)" [routerLink]="['/orders/order-listing']" [style.color]="style.baseColor"
+                  @fade>{{('My ' + ('orders' | localization: settings?.app_type: 1)) | translate}}</a></li>
+              <li><a class="active" href="javascript:void(0)" [style.color]="style.baseColor"
+                  @fade>{{orderHistory[selectedOrder]?.order_id}}</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!--================ End Page Breadcrumb Page ================-->
+
+    <!--================ Start Product Result Page ================-->
+    <section class="product_result_body">
+      <div class="container">
+        <div class="row cancel-order-outter align-items-center">
+          <div class="col-md-4 text-sm-left text-center">
+            <h4 [ngStyle]="{'backgroundColor': style.backgroundColor, 'color': style.baseColor}" class="order_no" @fade>
+              {{(('order' | localization: orderHistory[selectedOrder]?.type: 1) + ' No.') | translate}} :
+              {{orderHistory[selectedOrder]?.order_id}}</h4>
+            <p *ngIf="orderHistory[selectedOrder]?.status == 5">{{'thank_you_for_the' | localization | translate}}
+              {{'order' | translate}}
+            </p>
+          </div>
+
+          <div class="col-sm-8 d-flex justify-content-sm-end justify-content-center mb-3 mt-3">
+            <!-- && orderHistory[selectedOrder]?.is_edit == 1 -->
+            <app-order-payment
+              *ngIf="((orderHistory[selectedOrder]?.payment_status == 0 && orderHistory[selectedOrder]?.created_by > 0 && orderHistory[selectedOrder]?.status == 1) || 
+            (orderHistory[selectedOrder]?.remaining_amount && orderHistory[selectedOrder]?.payment_type == 1) || 
+            (orderHistory[selectedOrder]?.payment_status == 0 && orderHistory[selectedOrder]?.payment_type == 3 && orderHistory[selectedOrder]?.payment_after_confirmation == 1 && orderHistory[selectedOrder]?.status == 1))"
+              (paymentComplete)="getDetail()" [style]="style" [settings]="settings"
+              [order]="orderHistory[selectedOrder]">
+            </app-order-payment>
+
+            <button
+              *ngIf="settings?.enable_extra_product_service == 1 && orderHistory[selectedOrder]?.extraProduct.length && orderHistory[selectedOrder]?.extraProduct[0].confirmed_by_user == 0"
+              class="btn cancel-order" style="margin-right: 10px;"
+              [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+              (click)="onExtraProductUpdate()" type="button">{{'Newly Added Products' | translate}}</button>
+
+            <button *ngIf="settings?.is_sos_allow=='1'" class="btn cancel-order" style="margin-right: 10px;"
+              [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}" (click)="onSOSNotification()"
+              type="submit">{{'SOS' | translate}}</button>
+
+
+            <button *ngIf="settings?.is_zoom_call_enabled && 
+              !orderHistory[selectedOrder]?.zoom_call_start_url &&
+               orderHistory[selectedOrder]?.status==11" class="btn cancel-order"
+              [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}" (click)="zoomAuth()"
+              type="submit">{{'Create Video Link' | translate}}</button>
+
+            <button *ngIf="settings?.is_zoom_call_enabled &&
+               orderHistory[selectedOrder]?.zoom_call_start_url 
+                && orderHistory[selectedOrder]?.status==11" class="btn cancel-order"
+              [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+              (click)="joinZoomMeeting(orderHistory[selectedOrder]?.zoom_call_start_url)" type="submit">
+              {{'Join Video Call' | translate}}</button>
+
+
+            <button *ngIf="settings?.enable_audio_video &&
+               orderHistory[selectedOrder]?.agent[0]?.agent_bio_url" class="btn cancel-order"
+              [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+              (click)="listenAgentBio(orderHistory[selectedOrder]?.agent[0]?.agent_bio_url)" type="submit">{{'Agent Bio'
+              | translate}}</button>
+
+
+            <button class="btn cancel-order" [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+              *ngIf="settings?.can_user_edit=='1' && ![2,3,5,6,8].includes(orderHistory[selectedOrder]?.status) && orderHistory[selectedOrder].is_edit != 1 && [1,8].includes(settings?.app_type)"
+              (click)="onEditOrder(orderHistory[selectedOrder])">{{'Edit' | translate}}
+              {{'order' | localization: orderHistory[selectedOrder]?.type | translate}} </button>
+
+
+            <button
+              *ngIf="settings?.enable_pay_agent_extra_charge == 1 && orderHistory[selectedOrder]?.agent_extra_charge!=0 && orderHistory[selectedOrder]?.paid_agent_extra_charge==0 && orderHistory[selectedOrder]?.payment_status == 0"
+              class="btn cancel-order" [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+              (click)="newPayOnline(orderHistory[selectedOrder])">{{'Pay Online' | translate}} </button>
+
+
+            <span
+              *ngIf="settings?.enable_pay_agent_extra_charge == 1 && orderHistory[selectedOrder]?.agent_extra_charge!=0 && orderHistory[selectedOrder]?.paid_agent_extra_charge==1 && orderHistory[selectedOrder]?.payment_status == 1"
+              class="btn cancel-order"
+              [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}">{{'Paid' | translate}} </span>
+
+
+            <ng-container *ngIf="settings?.enable_cancel_order_after_confirmation && is_waiting_for_cancel"
+              [counter]="counter" [interval]="interval" (value)="getCounterValue($event)">
+              <h4 *ngIf="count > 1" [style.color]="style?.primaryColor" class="mt-2">{{'Order cancel time left :' |
+                translate}} {{ count | formatDuration: 's':'hhmmss'}}
+              </h4>
+            </ng-container>
+
+            <button class="btn cancel-order" [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+              *ngIf="is_waiting_for_cancel && [1,3,10,11].includes(orderHistory[selectedOrder]?.status) && 
+              settings?.enable_cancel_order_after_confirmation" (click)="onCancel(orderHistory[selectedOrder])">
+              {{'Cancel' | translate}}{{'order' | localization: orderHistory[selectedOrder]?.type | translate}}
+            </button>
+
+            <button class="btn cancel-order" [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+              *ngIf="![2,5,6,8].includes(orderHistory[selectedOrder]?.status) && checkAccAppType(orderHistory[selectedOrder]?.type, orderHistory[selectedOrder]?.status) && settings?.disable_user_cancel_order == 0 && 
+              ((orderHistory[selectedOrder]?.status == 0 && settings?.disbale_user_cancel_pending_order == 0) || 
+              (orderHistory[selectedOrder]?.status != 0 && settings?.disable_user_cancel_after_confirm == 0))"
+              (click)="onCancel(orderHistory[selectedOrder])">{{'Cancel' | translate}}
+              {{'order' | localization: orderHistory[selectedOrder]?.type | translate}} </button>
+
+            <button *ngIf="orderHistory[selectedOrder]?.dhlData && orderHistory[selectedOrder]?.dhlData.length"
+              class="btn cancel-order" [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+              (click)="dhlStatus()">View DHL Status</button>
+
+            <app-re-order
+              *ngIf="[2,5,6,8].includes(orderHistory[selectedOrder]?.status) && orderHistory[selectedOrder].type !== 8 && settings?.app_type != 8 && settings?.laundary_service_flow == 0"
+              [style]="style" [order]="orderHistory[selectedOrder]" [settings]="settings"></app-re-order>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-9"></div>
+          <div
+            *ngIf="(orderHistory[selectedOrder]?.self_pickup == 1 && [1,3,4,10,11].includes(orderHistory[selectedOrder].status)) && (![1,11].includes(settings?.app_type) || orderHistory[selectedOrder]?.self_pickup == 1 && [3,4,10].includes(orderHistory[selectedOrder].status))"
+            class="col-md-3">
+            <div class="form-group">
+              <label for="exampleFormControlSelect2" [style.color]="style.baseColor">{{'Select Status' |
+                translate}}</label>
+              <select class="form-control" style="box-shadow: none;" [(ngModel)]="orderHistory[selectedOrder].status"
+                (change)="onStatusChange($event.target.value)">
+                <option disabled selected
+                  [value]="[3,4,10,11].includes(orderHistory[selectedOrder].status) ? 0 : orderHistory[selectedOrder].status">
+                  {{'Select Status' | translate}}</option>
+                <option *ngIf="![1,11].includes(settings?.app_type)" [value]="11" [selected]="orderHistory[selectedOrder].status == 11"
+                  [disabled]="[3,4,5,10,11].includes(orderHistory[selectedOrder].status)">{{11 | orderStatus:
+                  orderHistory[selectedOrder]}}</option>
+                <option *ngIf="![1,11].includes(settings?.app_type)" [value]="10" [selected]="orderHistory[selectedOrder].status == 10"
+                  [disabled]="[3,4,5,10].includes(orderHistory[selectedOrder].status)">{{10 | orderStatus:
+                  orderHistory[selectedOrder]}}</option>
+                <option [value]="3" [selected]="orderHistory[selectedOrder].status == 3"
+                  [disabled]="[3,4,5].includes(orderHistory[selectedOrder].status)">{{3 | orderStatus:
+                  orderHistory[selectedOrder]}}</option>
+                <option [value]="4" [selected]="orderHistory[selectedOrder].status == 4"
+                  [disabled]="[4,5].includes(orderHistory[selectedOrder].status)"
+                  *ngIf="!settings?.enable_product_appointment || (settings?.enable_product_appointment && !orderHistory[selectedOrder].product[0].is_appointment)">
+                  {{4 | orderStatus | translate}}</option>
+                <option *ngIf="settings?.hide_pickup_status == 0" [value]="5"
+                  [selected]="orderHistory[selectedOrder].status == 5"
+                  [disabled]="orderHistory[selectedOrder].status == 5">{{(orderHistory[selectedOrder].type == 8 ||
+                  settings?.app_type == 8) ? 'End
+                  service' : 'Picked Up' | translate}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <i [style.color]="style.primaryColor" class="fa fa-arrow-left arrow-left cursor"
+          (click)="selectedOrder = selectedOrder - 1" *ngIf="selectedOrder != 0"></i>
+        <i [style.color]="style.primaryColor" class="fa fa-arrow-right arrow-right cursor"
+          (click)="selectedOrder = selectedOrder + 1" *ngIf="selectedOrder != orderHistory.length -1"></i>
+
+        <!------------------------------ Supplier Detail Start ---------------------------------->
+        <div class="row" *ngIf="settings.is_single_vendor == 0; else singleVendor">
+          <div class="col-md-12">
+            <div class="order-supplier" [ngClass]="settings?.hide_supplier_detail == 1 ? 'order_detail_block':''"
+              [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+              <div class="supplier-info">
+                <span *ngIf="settings?.hide_supplier_detail == 0">
+                  <h2 [ngStyle]="{'color': style.primaryColor}" class="capitalize" @fade>
+                    {{orderHistory[selectedOrder]?.supplier_name }}</h2>
+
+                  <p *ngIf="orderHistory[selectedOrder]?.email && settings?.display_supplier_email_order" [ngStyle]="{'color': style.baseColor}" @fade>
+                    <i class="fa fa-envelope mr-2" aria-hidden="true"
+                      @fade></i>{{orderHistory[selectedOrder]?.email}}</p>
+                  <p *ngIf="orderHistory[selectedOrder]?.supplier_address" [ngStyle]="{'color': style.baseColor}" @fade>
+                    <i class="fa fa-map-marker mr-1" aria-hidden="true"
+                      @fade></i>{{orderHistory[selectedOrder]?.supplier_address }}
+                  </p>
+                  <p *ngIf="orderHistory[selectedOrder]?.branch_address && settings?.branch_flow"
+                    [ngStyle]="{'color': style.baseColor}" @fade><i class="fa fa-map-marker mr-1" aria-hidden="true"
+                      @fade></i>{{'Branch Address' | translate}}: {{orderHistory[selectedOrder]?.branch_address }}
+                  </p>
+                </span>
+                <h5 [style.color]="style.baseColor" @fade>
+                  {{settings?.app_type == 8 ? 'Service Booked On' : 'ordered_on' | localization | translate}}
+                  {{orderHistory[selectedOrder]?.created_on | date: 'medium' : '+000'}}</h5>
+                <h5 @fade [style.color]="style.baseColor"
+                  *ngIf="!orderHistory[selectedOrder]?.is_schedule && orderHistory[selectedOrder]?.delivered_on != 'Invalid date' && orderHistory[selectedOrder]?.delivered_on != '0000-00-00 00:00:00'  && !orderHistory[selectedOrder]?.agent.length">
+                  <span *ngIf="settings?.app_type == 8" @fade>{{'Service Date:' | translate}}
+                    {{orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000'}}</span><br />
+                  <span
+                    *ngIf="settings?.app_type == 8 && orderHistory[selectedOrder]?.drop_off_date && settings?.dropoff_buffer == '1'"
+                    @fade>
+                    {{'Drop Off Date:' | translate}}{{orderHistory[selectedOrder]?.drop_off_date | date: 'medium' :
+                    '+000'}}
+                  </span>
+                  <span *ngIf="!settings?.enable_supplier_express_schedule_delivery_provide && settings?.app_type != 8 && settings.show_expected_delivery_between == 0 && settings?.selected_template!=4
+               && orderHistory[selectedOrder]?.self_pickup!=3 && orderHistory[selectedOrder]?.is_dine_in!=1"
+                    @fade>{{(orderHistory[selectedOrder]?.self_pickup == 1 ? 'Expected picked up on:' :
+                    [5,6].includes(orderHistory[selectedOrder]?.status) && orderHistory[selectedOrder]?.self_pickup == 0
+                    ? 'Delivered on' : 'expected_delivery_on' | localization) | translate}}
+
+                    <span
+                      *ngIf="!settings?.enable_supplier_express_schedule_delivery_provide && settings?.preparation_time_adding_to_expected_delivery_time != 1">
+                      {{orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000'}}
+                    </span>
+                    <span
+                      *ngIf="!settings?.enable_supplier_express_schedule_delivery_provide && settings?.preparation_time_adding_to_expected_delivery_time == 1">
+                      <span *ngIf="orderHistory[selectedOrder]?.status!=5">
+                        {{orderHistory[selectedOrder]?.service_date | date: 'medium' : '+000'}}
+                      </span>
+                      <span *ngIf="orderHistory[selectedOrder]?.status==5">
+                        {{orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000'}}
+                      </span>
+                    </span>
+                  </span>
+
+                  <span *ngIf="settings?.enable_supplier_express_schedule_delivery_provide && orderHistory[selectedOrder]?.delivery_date_time
+                     && !orderHistory[selectedOrder]?.express_delivery_charges" @fade>{{'Expected Delivery
+                    Slot:' | translate}}
+                    <span>
+                      {{orderHistory[selectedOrder]?.delivery_date_time | date: 'EEE, MMM d, y'}}&nbsp;
+                      <b>{{getDeliverySlot(orderHistory[selectedOrder]?.delivery_date_time)}}</b>
+                    </span>
+                  </span>
+
+
+
+
+
+
+
+                  <span *ngIf="settings?.app_type != 8 && settings.show_expected_delivery_between == 0 && settings?.selected_template!=4 && 
+                    orderHistory[selectedOrder]?.self_pickup==3 && orderHistory[selectedOrder]?.is_dine_in==1"
+                    @fade>{{'dine_in_date' | localization | translate}}:
+                    {{orderHistory[selectedOrder]?.schedule_date | date: 'medium' : '+000'}}</span>
+
+                  <span
+                    *ngIf="orderHistory[selectedOrder]?.delivered_on != '0000-00-00 00:00:00' && settings?.app_type != 8 && settings.show_expected_delivery_between == 1"
+                    @fade>{{(orderHistory[selectedOrder]?.self_pickup == 1 ? 'Expected Picked up on:' :
+                    [5,6].includes(orderHistory[selectedOrder]?.status) && orderHistory[selectedOrder]?.self_pickup == 0
+                    ? 'Delivered On:' : 'Expected Delivery In:') | translate}}
+                    {{orderHistory[selectedOrder]?.self_pickup == 1 ?
+                    (orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000') :
+                    ([5,6].includes(orderHistory[selectedOrder]?.status)
+                    && orderHistory[selectedOrder]?.self_pickup == 0 ?
+                    (orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000')
+                    : (orderHistory[selectedOrder]?.delivery_min_time + ' min to ' +
+                    orderHistory[selectedOrder]?.delivery_max_time +' min'))}}
+                  </span>
+                </h5>
+                <h5
+                  *ngIf="orderHistory[selectedOrder]?.is_schedule == 1 && orderHistory[selectedOrder]?.delivered_on != '0000-00-00 00:00:00'"
+                  [style.color]="style.baseColor" @fade>
+                  {{'Schedule Start Date:' | translate}}
+                  {{orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000'}}</h5>
+
+                <h5 *ngIf="orderHistory[selectedOrder]?.is_schedule == 1" [style.color]="style.baseColor" @fade>
+                  {{'Schedule End Date:' | translate}}
+                  {{orderHistory[selectedOrder]?.schedule_end_date | date: 'medium' : '+000'}}</h5>
+                <!-- 1 -->
+                <h5 [style.color]="style.baseColor"
+                  *ngIf="(settings?.app_type == 1 || orderHistory[selectedOrder]?.type == 1) && [10,11].includes(orderHistory[selectedOrder]?.status)"
+                  @fade>
+                  {{'preparation_time' | localization | translate}}:
+                  {{orderHistory[selectedOrder]?.preparation_time}}
+                </h5>
+                <h5 [style.color]="style.baseColor"
+                  *ngIf=" orderHistory[selectedOrder]?.shippingData && orderHistory[selectedOrder]?.shippingData.length"
+                  @fade>
+                  {{'order' | localization}} {{'shipment status' | translate}}
+                  {{orderHistory[selectedOrder]?.shippingData[0]?.orderStatus}}
+                </h5>
+
+              </div>
+              <div class="order-status">
+                <h4 [ngStyle]="{'color': style.primaryColor}"
+                  [style.color]="orderHistory[selectedOrder]?.status | orderStatusColor" @fade>
+                  {{((orderHistory[selectedOrder]?.status == 5 && orderHistory[selectedOrder]?.self_pickup == 1) ?
+                  'Picked' : (orderHistory[selectedOrder]?.status | orderStatus: orderHistory[selectedOrder]))|
+                  translate }}
+                </h4>
+                <p *ngIf="orderHistory[selectedOrder]?.status == 2 || settings?.show_edit_order_description == 1 && orderHistory[selectedOrder]?.approve_rejection_reason.trim()!='' && orderHistory[selectedOrder]?.approve_rejection_reason!=null"
+                  [style.color]="style?.baseColor"><b>{{'Rejection Reason:' | translate}} </b>
+                  {{orderHistory[selectedOrder]?.approve_rejection_reason}}</p>
+
+                <p *ngIf="orderHistory[selectedOrder]?.status == 8 && !!orderHistory[selectedOrder]?.order_cancel_by && orderHistory[selectedOrder]?.approve_rejection_reason.trim()!='' && orderHistory[selectedOrder]?.approve_rejection_reason!=null"
+                  [style.color]="style?.baseColor"><b>Cancellation Reason:</b>
+                  {{orderHistory[selectedOrder]?.approve_rejection_reason}}</p>
+
+                <div class="order_track_buttons">
+                  <a *ngIf="((orderHistory[selectedOrder].self_pickup == 0 && orderHistory[selectedOrder].agent.length) || orderHistory[selectedOrder].self_pickup == 1) && (([3,4].includes(orderHistory[selectedOrder]?.status) && settings?.app_type != 8) || ([11].includes(orderHistory[selectedOrder]?.status) && settings?.app_type == 8) )&& settings?.booking_track_status"
+                    [ngStyle]="{'color': style.primaryColor, 'borderColor': style.primaryColor, 'backgroundColor': '#ffffff', 'cursor': 'pointer'}"
+                    (click)="trackOrder(orderHistory[selectedOrder])" @fade>
+                    <span *ngIf="orderHistory[selectedOrder].self_pickup == 1" style="padding: 0px;">{{'supplier' |
+                      localization | translate }} {{'location' | translate}}</span>
+
+                    <span *ngIf="orderHistory[selectedOrder].self_pickup == 0" style="padding: 0px;">
+                      {{'track' | localization: orderHistory[selectedOrder]?.type | translate}}
+                      {{settings?.app_type == 8 ? 'agent' : 'order' | localization: orderHistory[selectedOrder]?.type}}
+                    </span>
+                  </a>
+
+                  <span
+                    *ngIf="[5,6].includes(orderHistory[selectedOrder]?.status) && orderHistory[selectedOrder].is_supplier_rated == 0 && settings.is_supplier_rating == 1"
+                    (click)="toRateSupplier(orderHistory[selectedOrder])" class="cursor"
+                    [style.color]="style.primaryColor" @fade>
+                    <i *ngIf="settings.enable_emoticon_rating == 0" class="fa fa-star" aria-hidden="true"></i>
+                    {{'rate_the' | localization | translate}} {{ 'supplier' | localization:
+                    orderHistory[selectedOrder]?.type |
+                    translate}}
+                  </span>
+
+                  <app-chat
+                    *ngIf="settings.chat_enable == 1 && orderHistory[selectedOrder].agent && orderHistory[selectedOrder].agent.length && [11,10,3].includes(orderHistory[selectedOrder].status)"
+                    [receiver_created_id]="orderHistory[selectedOrder].agent[0].agent_created_id"
+                    [order]="orderHistory[selectedOrder]"></app-chat>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #singleVendor>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="order-supplier"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <div class="single-supplier-info">
+                  <h5 [style.color]="style.baseColor" @fade>
+                    {{settings?.app_type == 8 ? ('Service Booked On:' | translate) : 'Ordered on:' | translate}}
+                    {{settings?.enable_orderdate_translate ? orderCreatedOn :
+                      orderHistory[selectedOrder]?.created_on | date: 'medium' : '+000'}}
+                  </h5>
+                  <h5 @fade [style.color]="style.baseColor"
+                    *ngIf="orderHistory[selectedOrder]?.delivered_on != 'Invalid date' && orderHistory[selectedOrder]?.delivered_on != '0000-00-00 00:00:00' && !orderHistory[selectedOrder]?.agent.length">
+                    <span *ngIf="settings?.app_type == 8" @fade>{{'Service Date:' | translate}}
+                      {{settings?.enable_orderdate_translate ? orderDeliveredOn :
+                        orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000'}}
+                    </span>
+                    <span *ngIf="orderHistory[selectedOrder]?.delivered_on != '0000-00-00 00:00:00' && settings?.app_type != 8 
+                     && settings?.selected_template!=4 &&
+                      orderHistory[selectedOrder]?.self_pickup!=3 && orderHistory[selectedOrder]?.is_dine_in!=1"
+                      @fade>{{ orderHistory[selectedOrder]?.is_schedule == 1 ? 'Schedule Start Date' :
+                      orderHistory[selectedOrder]?.self_pickup == 1 ? 'Expected Picked up on:' :
+                      [5,6].includes(orderHistory[selectedOrder]?.status) && orderHistory[selectedOrder]?.self_pickup ==
+                      0 ? 'Delivered On:' : 'Expected Delivery On:' | translate}}
+                      {{orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000'}}</span>
+
+                    <span *ngIf="orderHistory[selectedOrder]?.delivered_on != '0000-00-00 00:00:00' && settings?.app_type != 8 && 
+                      orderHistory[selectedOrder]?.self_pickup==3 && orderHistory[selectedOrder]?.is_dine_in==1"
+                      @fade>{{'Dinin Date' | translate}}
+                      {{orderHistory[selectedOrder]?.schedule_date | date: 'medium' : '+000'}}</span>
+                  </h5>
+
+                  <h5 *ngIf="orderHistory[selectedOrder]?.is_schedule == 1" [style.color]="style.baseColor" @fade>
+                    {{'Schedule End Date:' | translate}}
+                    {{orderHistory[selectedOrder]?.schedule_end_date | date: 'medium' : '+000'}}</h5>
+
+                  <h5 [style.color]="style.baseColor"
+                    *ngIf="(settings?.app_type == 1 || orderHistory[selectedOrder]?.type == 1) && [1,10,11].includes(orderHistory[selectedOrder]?.status)"
+                    @fade>
+                    {{'preparation_time' | localization | translate}}:
+                    {{orderHistory[selectedOrder]?.preparation_time | prepTime}}
+                  </h5>
+                  <h5 [style.color]="style.baseColor"
+                    *ngIf=" orderHistory[selectedOrder]?.shippingData && orderHistory[selectedOrder]?.shippingData.length"
+                    @fade>
+                    {{'order' | localization}} {{'shipment status' | translate}}:
+                    {{orderHistory[selectedOrder]?.shippingData[0]?.orderStatus}}
+                  </h5>
+                </div>
+                <div class="order-status">
+                  <h4 [ngStyle]="{'color': style.primaryColor}" @fade>
+                    {{(orderHistory[selectedOrder]?.status == 5 && orderHistory[selectedOrder]?.self_pickup == 1 ?
+                    'Picked' : orderHistory[selectedOrder]?.status | orderStatus: orderHistory[selectedOrder]) |
+                    translate}}
+                  </h4>
+                  <div class="order_track_buttons">
+                    <a *ngIf="(([3,4].includes(orderHistory[selectedOrder]?.status) && ([1,2].includes(orderHistory[selectedOrder]?.type || [1,2].includes(settings?.app_type))))
+                    || ([10,11].includes(orderHistory[selectedOrder]?.status) && ([orderHistory[selectedOrder]?.type, settings?.app_type].includes(8)))) 
+                    && settings?.booking_track_status && !orderHistory[selectedOrder]?.self_pickup"
+                      [ngStyle]="{'color': style.primaryColor, 'borderColor': style.primaryColor, 'backgroundColor': '#ffffff'}"
+                      (click)="trackOrder(orderHistory[selectedOrder])" @fade>{{(settings?.app_type == 8 ? 'Track Agent'
+                      : 'Track Order') | translate}}</a>
+
+                    <!-- <span *ngIf="[5,6].includes(orderHistory[selectedOrder]?.status)"
+                    (click)="toRateSupplier(orderHistory[selectedOrder])" class="cursor"
+                    [style.color]="style.primaryColor" @fade>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    {{'Rate and Review' | translate}}
+                  </span> -->
+                  </div>
+                  <p *ngIf="orderHistory[selectedOrder]?.status == 2 && orderHistory[selectedOrder]?.approve_rejection_reason.trim()!='' && orderHistory[selectedOrder]?.approve_rejection_reason!=null"
+                    [style.color]="style?.baseColor"><b>{{'Rejection Reason' | translate }}:</b>
+                    {{orderHistory[selectedOrder]?.approve_rejection_reason}}</p>
+                  <p *ngIf="orderHistory[selectedOrder]?.status != 2 && settings?.show_edit_order_description == 1 && orderHistory[selectedOrder]?.is_edit && orderHistory[selectedOrder]?.approve_rejection_reason.trim()!='' && orderHistory[selectedOrder]?.approve_rejection_reason!=null"
+                    [style.color]="style?.baseColor"><b>{{'Added Reason' | translate }}:</b>
+                    {{orderHistory[selectedOrder]?.approve_rejection_reason}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
+
+        <!------------------------------ Supplier Detail End ---------------------------------->
+
+        <div class="row">
+          <div *ngIf="!isEditOrder" class="col-md-8">
+            <!-- <h5 class="float-left" *ngIf="orderHistory.length" [style.color]="status[orderHistory[selectedOrder]?.status].color">{{status[orderHistory[selectedOrder]?.status].name}}</h5> -->
+            <div *ngFor="let data of orderHistory[selectedOrder]?.products;trackBy:trackByOrderHistoryFn">
+              <div class="track_order_outter food_track_order_outer"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <div class="track_order_name_detail" style="position: relative;">
+                  <span class="track_order_img">
+                    <img appImage [url]="data?.image_path" [size]="'500x500'" [src]="data?.image_path"
+                      [settings]="settings" @fade>
+                  </span>
+                  <div class="track_order_name">
+                    <!-- <h6>Electronices</h6> -->
+                    <h2 [style.color]="style.baseColor" @fade>{{data?.product_name}}</h2>
+                    <p *ngIf="settings?.branch_flow == 1 && data?.branch_name">Branch: {{data?.branch_name}}</p>
+                    <p *ngIf="settings?.is_product_weight == 1 && data?.duration">Weight: {{data?.duration}}g</p>
+
+                    <h4 @fade>
+                      <span [style.color]="style.baseColor" *ngIf="data?.is_product">{{(data?.price_type ? 'Hours' :
+                        'Quantity') | translate}}: </span>
+                      <span [style.color]="style.baseColor"
+                        *ngIf="!data?.is_product && !settings?.enable_no_of_client_to_be_served">{{(data?.price_type ?
+                        'Duration' : (settings?.count_customization_items && data.customization ? 'Items' : 'Quantity'))
+                        | translate}}: </span>
+                      <span [style.color]="style.baseColor"
+                        *ngIf="!data?.is_product && settings?.enable_no_of_client_to_be_served">{{(data?.price_type ?
+                        'Duration' :
+                        'No. Of Clients') | translate}}: </span>
+                      <span [style.color]="style.primaryColor"
+                        *ngIf="!data?.is_product && data?.price_type; else other_content">{{data?.duration |
+                        formatTimeInterval}}</span>
+
+                    </h4>
+                    <h4 *ngIf="data?.reason">
+                      <small>{{'Note:'}}&nbsp;{{data?.reason}}</small>
+                    </h4>
+                    <div *ngIf="data.customization">
+                      <ul class="cart-product-addon">
+                        <li *ngFor="let cust of data.customization.data;trackBy:trackByCustomizationFn"
+                          [style.color]="style.baseColor" opacity="0.5">
+                          <span *ngIf = '!settings?.hide_homeservice_cleaning_selected_title_from_cart'>
+                            {{cust?.name }} -  </span> 
+                          {{addOnNames(cust?.value)}}
+                        </li>
+
+                        <!-- <li *ngIf="data.customization.data && data.customization.data.length">
+                          Special Instructions - {{data.customization.special_instructions}}
+                        </li> -->
+                      </ul>
+
+                    </div>
+                    <div *ngIf="data.prod_variants && data.prod_variants.length">
+                      <div *ngFor="let variant of data.prod_variants;trackBy:trackByVariantsFn">
+                        <ng-template [ngIf]="variant.variant_type != 1" [ngIfElse]="color">
+                          <p class="mb-0" [style.color]="style.baseColor">
+                            {{variant?.variant_name}}:<span>{{variant?.variant_value}}</span></p>
+                        </ng-template>
+                        <ng-template #color>
+                          <p class="mb-0" [style.color]="style.baseColor">{{variant?.variant_name}}:<span
+                              class="cart-color-varient" [style.background-color]="variant?.variant_value"></span></p>
+                        </ng-template>
+                      </div>
+                    </div>
+                    <div *ngIf="settings?.enable_in_out_network">
+                      <p *ngIf="data?.product_reference_id">
+                        {{'Product Ref Id' |translate}}:&nbsp;<b>{{data?.product_reference_id}}</b>
+                      </p>
+                      <p *ngIf="data?.product_owner_name">
+                        {{'Product Owner Name' |translate}}:&nbsp;<b>{{data?.product_owner_name}}</b>
+                      </p>
+                      <p *ngIf="data?.product_dimensions">
+                        {{'Product Dimensions' |translate}}:&nbsp;<b>{{data?.product_dimensions}}</b>
+                      </p>
+                      <p *ngIf="data?.product_upload_reciept">
+                        {{'Product Receipt' |translate}}:&nbsp;
+                        <span class="image_view" (click)="downloadReceipt(data?.product_upload_reciept)">
+                          <b>{{'View Receipt'}}</b>
+                        </span>
+                      </p>
+                    </div>
+
+                    <ng-template #other_content><span *ngIf="!settings?.count_customization_items"
+                        [style.color]="style.baseColor">{{data?.quantity}}
+                        <ng-container *ngIf="data?.freeQuantity">
+                          + {{data?.freeQuantity}} {{'Free' | translate}}
+                        </ng-container>
+                      </span>
+                      <ng-container *ngIf="settings?.count_customization_items">
+                        <ng-container *ngIf="data.customization;else quantityTemp">
+                          <span *ngFor="let cust of data.customization.data;trackBy:trackByCustomizationFn"
+                            [style.color]="style.baseColor" opacity="0.5">
+                            {{countAddOnItems(cust?.value)}}
+                          </span>
+                        </ng-container>
+                        <ng-template #quantityTemp>
+                          <span [style.color]="style.baseColor" opacity="0.5">{{data?.quantity}}</span>
+                        </ng-template>
+                      </ng-container>
+
+                    </ng-template>
+
+                    <!-- <h4 [style.color]="style.baseColor">{{'supplier' | localization}} : <span
+                    [style.color]="style.primaryColor">{{orderHistory[selectedOrder]?.supplier_name}}</span></h4>
+                <h4 [style.color]="style.baseColor">{{'Status'}} : <span
+                    [style.color]="orderHistory[selectedOrder]?.status | orderStatusColor">{{orderHistory[selectedOrder]?.status | orderStatus}}</span>
+                </h4> -->
+                  </div>
+                  <div class="tracker_order_price">
+                    <!-- <h3>{{currency}}  {{util.convertIntoNumber(data?.price) * data?.quantity}}</h3> -->
+
+                    <h3 [style.color]="style.baseColor"@fade>
+                      <p [style.color]="style.baseColor" @fade>
+                        <span class="cursor instruction mr-4" [style.color]="style.primaryColor"
+                          *ngIf="settings?.enable_product_special_instruction && (data?.special_instructions || data?.customization?.special_instructions)"
+                          (click)="showSpecialInstruction(data)">
+                          {{'View Special Instructions' | translate}}
+                        </span>
+                      </p>
+                      {{orderHistory[selectedOrder]?.local_currency || currency }}
+                      {{util.convertIntoNumber((settings?.hide_homeservice_total_price_show_with_service_after_booking ? orderHistory[selectedOrder]?.total_order_price : data?.totalPrice*1)*selected_currency?.conversion_rate)?.toFixed(settings?.price_decimal_length)
+                      | number : settings?.addon_decimal_value}}
+                    </h3>
+
+
+                    <div *ngIf="data.recipe_pdf">
+                      <a class="download-file" (click)="download(data)">{{'product_file_upload' | localization}}</a>
+                    </div>
+                    <!-- <div class="charges">
+                  <h6 [style.color]="style.secondaryColor">Delivery Charges:&nbsp; <span [style.color]="style.secondaryColor">{{data?.delivery_charges}}</span></h6>
+                  <h6 [style.color]="style.secondaryColor">Handling Charges:&nbsp; <span [style.color]="style.secondaryColor">{{data?.handling_admin + data?.handling_supplier}}</span></h6>
+                </div> -->
+                    <span
+                      *ngIf="[5,6].includes(orderHistory[selectedOrder]?.status) && data.is_rated == 0 && settings.is_product_rating == 1"
+                      (click)="toRateProduct(data, 'product')" class="cursor" [style.color]="style.primaryColor">
+                      <i class="fa fa-star" aria-hidden="true"></i>
+                      {{'Rate The' | translate}}
+                      {{'product' | localization: orderHistory[selectedOrder]?.type | translate}}
+                    </span>
+                  </div>
+                  <a type="button" [style.color]="style.primaryColor" class="return-request"
+                    *ngIf="settings?.is_return_request == 1 && !(data?.return_data && data?.return_data.length) && [5,6].includes(orderHistory[selectedOrder]?.status)"
+                    (click)="returnRequest(data)">{{'Return Request' | translate}}</a>
+                  <span
+                    *ngIf="settings?.is_return_request == 1 && data?.return_data && data?.return_data.length > 0 && [5,6].includes(orderHistory[selectedOrder]?.status)"
+                    class="return-status">{{'status' | translate }}: {{data?.return_data[0].status | returnStatus}}</span>
+                  <span
+                    *ngIf="settings?.is_return_request == 1 && data?.return_data && data?.return_data.length > 0 && data?.return_data[0].reason && [5,6].includes(orderHistory[selectedOrder]?.status)"
+                    class="return-status">{{'reason' | translate }}: {{data?.return_data[0].reason}}</span>
+                </div>
+
+                <div class="track_order_number food_track_order" *ngIf="settings?.hide_start_end_time == 0">
+
+                  <!-- <h5 [style.color]="style.baseColor">{{settings?.app_type == 8 ? 'Service Booked On:' : 'Ordered on:'}}
+                {{orderHistory[selectedOrder]?.created_on | date: 'medium' : '+000'}}</h5> -->
+                  <!-- <h5 [style.color]="style.baseColor"
+                *ngIf="orderHistory[selectedOrder]?.delivered_on != 'Invalid date' && !orderHistory[selectedOrder]?.agent.length">
+                <span>{{settings?.app_type == 8 ? 'Service Date:' : [5,6].includes(orderHistory[selectedOrder]?.status) ? 'Delivered On:' : 'Expected Delivery On:'}}
+                  {{orderHistory[selectedOrder]?.delivered_on | date: 'medium' : '+000'}}</span></h5> -->
+                  <h5 [style.color]="style.baseColor"
+                    *ngIf="settings?.app_type == 8 && orderHistory[selectedOrder]?.delivered_on != 'Invalid date'"
+                    @fade>
+                    <span [style.color]="style.baseColor">{{'Start Time' | translate}}:
+                      {{orderHistory[selectedOrder]?.start_time | date: 'medium' : '+000'}}
+                    </span>
+                    <br><span [style.color]="style.baseColor">{{'End Time' | translate}}:
+                      {{orderHistory[selectedOrder]?.end_time | date: 'medium' : '+000'}}
+                    </span>
+                  </h5>
+
+                  <!-- <div class="order_track_buttons">
+                <a *ngIf="[3,4].includes(orderHistory[selectedOrder]?.status) && settings?.booking_track_status && !orderHistory[selectedOrder]?.self_pickup"
+                  [ngStyle]="{'color': style.primaryColor, 'borderColor': style.primaryColor, 'backgroundColor': '#ffffff'}"
+                  (click)="trackOrder(orderHistory[selectedOrder])">{{settings?.app_type == 8 ? 'Track Agent' : 'Track Order'}}</a> -->
+                  <!-- <a [ngStyle]="{'color': style.primaryColor, 'borderColor': style.primaryColor, 'backgroundColor': '#ffffff'}">{{'Help' | translate}}</a> -->
+                  <!-- <a href="javascript:void(0)">Reorder</a> -->
+                  <!-- </div> -->
+                </div>
+
+              </div>
+            </div>
+
+            <div class="row"
+              *ngIf="settings?.enable_extra_product_service == 1 && 
+            !!orderHistory[selectedOrder]?.extraProduct.length && orderHistory[selectedOrder]?.extraProduct[0].confirmed_by_user == 1">
+              <div class="col-md-12">
+                <div *ngFor="let data of orderHistory[selectedOrder]?.extraProduct;trackBy:trackByOrderHistoryFn">
+                  <div class="track_order_outter food_track_order_outer"
+                    [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                    <div class="track_order_name_detail" style="position: relative;">
+                      <span class="track_order_img">
+                        <img appImage [url]="data?.image" [size]="'500x500'" [src]="data?.image_path"
+                          [settings]="settings" @fade>
+                      </span>
+                      <div class="track_order_name">
+                        <h2 [style.color]="style.baseColor" @fade>{{data?.name}}</h2>
+                        <h4 @fade>
+                          <span [style.color]="style.baseColor">Quantity: {{data.quantity}}</span>
+                        </h4>
+                      </div>
+                      <div class="tracker_order_price">
+                        <h3 [style.color]="style.baseColor" @fade>
+                          {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{util.convertIntoNumber((data?.price*1)*selected_currency?.conversion_rate)?.toFixed(settings?.price_decimal_length)}}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- </div> -->
+
+            <div class="row">
+              <div class="col-12 order-detail">
+                <app-questions-list
+                  *ngIf="orderHistory[selectedOrder].questions && orderHistory[selectedOrder].questions.length"
+                  [questions]="orderHistory[selectedOrder].questions" [style]="style"
+                  [cartPrice]="{amount: orderHistory[selectedOrder]?.total_order_price}">
+                </app-questions-list>
+              </div>
+            </div>
+
+            <app-order-attachments [order]="orderHistory[selectedOrder]" [settings]="settings"></app-order-attachments>
+
+            <div class="order-instruction" *ngIf="orderHistory[selectedOrder].parking_instructions">
+              <h5>{{'Parking Instructions' | translate}}</h5>
+              <p>{{orderHistory[selectedOrder].parking_instructions}}</p>
+            </div>
+            <div class="order-instruction" *ngIf="orderHistory[selectedOrder].area_to_focus">
+              <h5>{{'Area To Focus' | translate}}</h5>
+              <p>{{orderHistory[selectedOrder].area_to_focus}}</p>
+            </div>
+
+          </div>
+
+          <div *ngIf="isEditOrder" class="col-md-8">
+            <div *ngFor="let data of editOrder?.products;trackBy:trackByEditOrderFn">
+              <div class="track_order_outter food_track_order_outer"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <div class="track_order_name_detail" style="position: relative;">
+                  <span class="track_order_img">
+                    <img appImage [url]="data?.image_path" [size]="'500x500'" [src]="data?.image_path"
+                      [settings]="settings" @fade>
+                  </span>
+                  <div class="track_order_name">
+                    <!-- <h6>Electronices</h6> -->
+                    <h2 [style.color]="style.baseColor" @fade>{{data?.product_name || data?.name}}</h2>
+                    <p *ngIf="settings?.branch_flow == 1 && data?.branch_name">Branch: {{data?.branch_name}}</p>
+                    <!-- <h4 @fade>
+                    <span [style.color]="style.baseColor"
+                      *ngIf="data?.is_product">{{data?.price_type ? 'Hours' : 'Quantity' | translate}} : </span>
+                    <span [style.color]="style.baseColor"
+                      *ngIf="!data?.is_product">{{data?.price_type ? 'Duration' : 'Quantity'}} : </span>
+                    <span [style.color]="style.primaryColor"
+                      *ngIf="!data?.is_product && data?.price_type; else other_content">{{data?.duration | formatTimeInterval}}</span>
+                  </h4> -->
+                    <!-- <div *ngIf="data.customization">
+                    <ul class="cart-product-addon">
+                      <li *ngFor="let cust of data.customization.data" [style.color]="style.baseColor" opacity="0.5">
+                        {{cust?.name}} -
+                        {{addOnNames(cust?.value)}}
+                      </li>
+                    </ul>
+                  </div> -->
+                    <!-- <div *ngIf="data.prod_variants && data.prod_variants.length">
+                    <div *ngFor="let variant of data.prod_variants">
+                      <ng-template [ngIf]="variant.variant_type != 1" [ngIfElse]="color">
+                        <p class="mb-0" [style.color]="style.baseColor">
+                          {{variant?.variant_name}}:<span>{{variant?.variant_value}}</span></p>
+                      </ng-template>
+                      <ng-template #color>
+                        <p class="mb-0" [style.color]="style.baseColor">{{variant?.variant_name}}:<span
+                            class="cart-color-varient" [style.background-color]="variant?.variant_value"></span></p>
+                      </ng-template>
+                    </div>
+                  </div> -->
+                    <!-- <ng-template #other_content><span [style.color]="style.baseColor">{{data?.quantity}}</span>
+                  </ng-template> -->
+                    <div>
+                      <app-quantity-buttons [style]="style" [settings]="settings" [priceType]="data?.price_type"
+                        [isProduct]="data?.is_product" [selectedQuantity]="data?.selectedQuantity || data?.quantity"
+                        (onAdd)="increaseValue(data)" (onRemove)="decreaseValue(data)">
+                      </app-quantity-buttons>
+                      <!-- <app-quantity-buttons *ngIf="settings.product_detail == 0" [style]="style"
+                              [settings]="settings" [priceType]="product?.price_type" [isProduct]="product?.is_product"
+                              [selectedQuantity]="product.selectedQuantity"
+                              (onRemove)="onServiceAddOrRemove(product, -1)" (onAdd)="onServiceAddOrRemove(product, 1)">
+                            </app-quantity-buttons> -->
+                    </div>
+                  </div>
+                  <div class="tracker_order_price">
+                    <h3 [style.color]="style.baseColor" @fade>
+                      {{orderHistory[selectedOrder]?.local_currency || currency }}
+                      {{util.convertIntoNumber((data?.fixed_price*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}
+                    </h3>
+                  </div>
+
+                </div>
+
+                <!-- <div class="track_order_number food_track_order">
+                  <h5 [style.color]="style.baseColor"
+                    *ngIf="settings?.app_type == 8 && orderHistory[selectedOrder]?.delivered_on != 'Invalid date' && orderHistory[selectedOrder]?.agent.length"
+                    @fade>
+                    <span [style.color]="style.baseColor">Start Time:
+                      {{orderHistory[selectedOrder]?.start_time | date: 'medium' : '+000'}}
+                    </span>
+                    <br><span [style.color]="style.baseColor">End Time:
+                      {{orderHistory[selectedOrder]?.end_time | date: 'medium' : '+000'}}
+                    </span>
+                  </h5>
+                </div> -->
+
+              </div>
+            </div>
+
+            <div>
+              <button *ngIf="editOrder.products && editOrder.products.length" class="btn cancel-order"
+                [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}"
+                (click)="onAddItems(orderHistory[selectedOrder])">{{'Place' | translate}}
+                {{'order' | localization: orderHistory[selectedOrder]?.type | translate}} </button>
+              <button class="btn cancel-order" (click)="itemSelection()"
+                [ngStyle]="{'border-color': style.primaryColor, 'color': style.baseColor}">{{'Add' | translate}}
+                {{'product' | localization: orderHistory[selectedOrder]?.type | translate}} </button>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="track_order_outter_detail"
+              [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+              <h3 [style.color]="style.baseColor" @fade>{{'address_details' | localization | translate}}</h3>
+              <ng-container *ngIf="orderHistory[selectedOrder]?.self_pickup === 1;then selfPick">
+              </ng-container>
+              <ng-container *ngIf="orderHistory[selectedOrder]?.self_pickup === 0;then deliver">
+              </ng-container>
+              <ng-container *ngIf="orderHistory[selectedOrder]?.self_pickup === 3;then dininBooking">
+              </ng-container>
+              <ng-container *ngIf="settings?.enable_user_vehicle_number;then vehicleNo">
+              </ng-container>
+              <ng-template #deliver>
+                <h6 [style.color]="style.baseColor" @fade>
+                  <strong class="dinin">{{settings?.app_type == 8 ? ('Service At'| translate) : 'deliver_to'|
+                    localization |
+                    translate}}</strong>
+                </h6>
+                <address [style.color]="style.baseColor" @fade><i class="fa fa-map-marker mr-1" aria-hidden="true"></i>
+                  <span class="parameter">{{'Address' | translate}}:
+               </span><span class="detail">{{orderHistory[selectedOrder]?.delivery_address?.address_line_1}}</span> <br>
+               <span class="detail">{{orderHistory[selectedOrder]?.delivery_address?.customer_address | translate}}</span><br>
+                  <span *ngIf="orderHistory[selectedOrder]?.delivery_address?.user_name"><span class="parameter">{{'Name' | translate}}:</span>
+                  <span class="detail"> {{orderHistory[selectedOrder]?.delivery_address?.user_name}}</span> <br></span>
+                  <span *ngIf="orderHistory[selectedOrder]?.delivery_address?.city"><span class="parameter">{{'City' | translate}}:</span>
+                  <span class="detail">    {{orderHistory[selectedOrder]?.delivery_address?.city}}</span><br></span>
+                  <span *ngIf="orderHistory[selectedOrder]?.delivery_address?.state"><span class="parameter">{{'State' | translate}}:</span>
+                  <span class="detail">  {{orderHistory[selectedOrder]?.delivery_address?.state}}</span><br></span>
+                  <span *ngIf="orderHistory[selectedOrder]?.delivery_address?.pincode"><span class="parameter">{{'Pin Code' | translate}}:</span>
+                  <span class="detail">   {{orderHistory[selectedOrder]?.delivery_address?.pincode}}</span><br></span>
+                  <span *ngIf="orderHistory[selectedOrder]?.delivery_address?.landmark"><span class="parameter">{{'Landmark' | translate}}:</span>
+                  <span class="detail">   {{orderHistory[selectedOrder]?.delivery_address?.landmark}}</span><br></span>
+
+                  <span *ngIf="orderHistory[selectedOrder]?.building_no">Building No.:
+                    {{orderHistory[selectedOrder]?.building_no}},
+                    &nbsp;</span>
+                <span *ngIf="orderHistory[selectedOrder]?.street_name">Street Name:
+                    {{orderHistory[selectedOrder]?.street_name}},
+                    &nbsp;</span>
+                <span *ngIf="orderHistory[selectedOrder]?.street_no">Street No.:
+                    {{orderHistory[selectedOrder]?.street_no}},
+                    &nbsp;</span>
+                <span *ngIf="orderHistory[selectedOrder]?.zone_no">Zone No.:
+                    {{orderHistory[selectedOrder]?.zone_no}},
+                    &nbsp;</span>
+                <span *ngIf="orderHistory[selectedOrder]?.additional_directions">Additional Directions:
+                    {{orderHistory[selectedOrder]?.additional_directions}},
+                   &nbsp;</span> <br>
+
+                  <span *ngIf="orderHistory[selectedOrder]?.delivery_address?.reference_address">{{'Ref. Address'}}:
+                    &nbsp;<b>{{orderHistory[selectedOrder]?.delivery_address?.reference_address}}</b></span>
+                </address>
+              </ng-template>
+              <ng-template #selfPick>
+                <h6 [style.color]="style.baseColor" class="dinin" @fade>{{'pick_from' | localization | translate}}</h6>
+                <address [style.color]="style.baseColor" @fade><i class="fa fa-map-marker mr-1" aria-hidden="true"></i>
+                  {{orderHistory[selectedOrder]?.supplier_address}}<br>
+                </address>
+              </ng-template>
+              <ng-template #dininBooking>
+                <h6 [style.color]="style.baseColor" class="dinin" @fade>{{'dinin_at' | localization | translate}}</h6>
+                <address [style.color]="style.baseColor" @fade><i class="fa fa-map-marker mr-1" aria-hidden="true"></i>
+                  {{orderHistory[selectedOrder]?.supplier_address}}<br>
+                </address>
+
+                <h6><a (click)="getLocationSearch(orderHistory[selectedOrder]?.supplier_address)">{{'Direction' | translate}} <i class="fa fa-location-arrow mr-1" aria-hidden="true"></i></a></h6>
+              </ng-template>
+              <ng-template #vehicleNo>
+                <address *ngIf="orderHistory[selectedOrder]?.vehicle_number" [style.color]="style.baseColor" @fade><i
+                    class="fa fa-car mr-1" aria-hidden="true"></i>
+                  {{'Vehicle Number' | translate}}:&nbsp;<b>{{orderHistory[selectedOrder]?.vehicle_number}}</b>
+                </address>
+              </ng-template>
+            </div>
+
+            <div *ngIf="orderHistory[selectedOrder].table_details && orderHistory[selectedOrder].is_dine_in==1"
+              class="track_order_outter_detail"
+              [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+              <h3 [style.color]="style.baseColor" @fade>{{'TABLE DETAILS' | translate}}</h3>
+
+              <div *ngIf="orderHistory[selectedOrder].table_details">
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'table_no' | localization | translate}}:&nbsp;</label>
+                  <strong>{{orderHistory[selectedOrder].table_details.table_number || 'N/A'}}</strong>
+                </h6>
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'table_name' | localization | translate}}:&nbsp;</label>
+                  <strong>{{orderHistory[selectedOrder].table_details.table_name || 'N/A'}}</strong>
+                </h6>
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'seating_capacity' | localization | translate}}:&nbsp;</label>
+                  <strong>{{orderHistory[selectedOrder].table_details.seating_capacity}}</strong>
+                </h6>
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'slot_date' | localization | translate}}:&nbsp;</label>
+                  <strong>
+                    {{orderHistory[selectedOrder].table_details.schedule_date | tableDateTime : 'DD MMM yyyy' ||
+                    'N/A'}}</strong>
+                </h6>
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'slot_time' | localization | translate}}:&nbsp;</label>
+                  <strong>
+                    {{orderHistory[selectedOrder].table_details.schedule_date | tableDateTime : 'h:mm a' ||
+                    'N/A'}}</strong>
+                </h6>
+              </div>
+            </div>
+            <div
+              *ngIf="orderHistory[selectedOrder].multi_table_details && settings?.enable_multiple_table_booking_at_once"
+              class="track_order_outter_detail"
+              [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+              <h3 [style.color]="style.baseColor" @fade>{{'TABLE DETAILS' | translate}}</h3>
+
+              <div *ngFor="let tbl of orderHistory[selectedOrder].multi_table_details" class="tbls_details">
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'table_no' | localization | translate}}:&nbsp;</label>
+                  <strong>{{tbl.table_number || 'N/A'}}</strong>
+                </h6>
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'table_name' | localization | translate}}:&nbsp;</label>
+                  <strong>{{tbl.table_name || 'N/A'}}</strong>
+                </h6>
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'seating_capacity' | localization | translate}}:&nbsp;</label>
+                  <strong>{{tbl.seating_capacity}}</strong>
+                </h6>
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'slot_date' | localization | translate}}:&nbsp;</label>
+                  <strong>
+                    {{orderHistory[selectedOrder].schedule_date | tableDateTime : 'DD MMM yyyy' ||
+                    'N/A'}}</strong>
+                </h6>
+                <h6 [style.color]="style.baseColor">
+                  <label class="dinin">{{'slot_time' | localization | translate}}:&nbsp;</label>
+                  <strong>
+                    {{orderHistory[selectedOrder].schedule_date | tableDateTime : 'h:mm a' ||
+                    'N/A'}}</strong>
+                </h6>
+              </div>
+            </div>
+
+
+            <div *ngIf="settings?.enable_cctv==1 && settings?.enable_cctv_for_web==1" class="track_order_outter_detail"
+              [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+              <h3 [style.color]="style.baseColor" @fade>{{'CCTV DETAILS' | translate}}</h3>
+
+              <div>
+                <h6 [style.color]="style.baseColor" *ngFor="let cctv of orderHistory[selectedOrder].cctv_links">
+                  <label>{{cctv.title}}&nbsp;:&nbsp;</label>
+                  <strong>
+                    <span class="image_view" (click)="openVideoViewer(cctv)">
+                      {{'View'}}
+                    </span>
+                  </strong>
+                </h6>
+              </div>
+            </div>
+
+
+            <div *ngIf="orderHistory[selectedOrder]">
+              <app-order-status-tracker [style]="style" [settings]="settings" [order]="orderHistory[selectedOrder]"
+                @fade>
+              </app-order-status-tracker>
+            </div>
+
+
+            <div *ngIf="orderHistory[selectedOrder]?.agent.length && !orderHistory[selectedOrder]?.self_pickup">
+              <div class="track_order_outter_detail"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <h3 [style.color]="style.baseColor" class="text-uppercase" @fade>
+                  {{'agent' | localization: orderHistory[selectedOrder]?.type | translate}} {{'DETAILS' |translate}}
+                  <span class="float-right" style="font-size: 12px; float: right;"
+                    *ngIf="[5].includes(orderHistory[selectedOrder]?.status) &&  settings.is_agent_rating == 1"
+                    (click)="toRateAgent(orderHistory[selectedOrder])" class="cursor" [style.color]="style.primaryColor"
+                    @fade>
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                    {{'Rate The' | translate }} {{ 'agent' | localization: orderHistory[selectedOrder]?.type | translate}}
+                  </span>
+
+                  <button
+                    *ngIf="settings?.enable_agent_review_list == 1 && !!orderHistory[selectedOrder]?.agent[0].reviews && orderHistory[selectedOrder]?.agent[0].reviews.length"
+                    [style.border-color]="style?.primaryColor" class="float-right btn cancel-order"
+                    (click)="openReviews(orderHistory[selectedOrder]?.agent[0])"
+                    style="cursor: pointer;height: 40px;padding: 5px;" @fade>{{'Reviews' | translate}}</button>
+                </h3>
+
+                <div class="billing-info">
+                  <ul class="bill-list" [style.color]="style.baseColor">
+                    <li>
+                      <div class="row no-gutters word-break">
+                        <div class="col-md-5 col-6" @fade>{{'Name' | translate}}</div>
+                        <div class="col-md-7 col-6 word capitalize" @fade>
+                          {{orderHistory[selectedOrder]?.agent[0]?.name | translate}}
+                        </div>
+                      </div>
+                    </li>
+                    <!-- <li>
+                  <div class="row word-break">
+                    <div class="col-md-4">Email</div>
+                    <div class="col-md-8 word">{{orderHistory[selectedOrder]?.agent[0]?.email}}</div>
+                  </div>
+                </li> -->
+                    <li *ngIf="!settings?.is_number_masking_enable">
+                      <div class="row no-gutters word-break">
+                        <div class="col-md-5 col-6" @fade>{{'Phone No.'| translate}}</div>
+                        <div class="col-md-7 col-6 word" @fade>{{orderHistory[selectedOrder]?.agent[0]?.phone_number}}
+                        </div>
+                      </div>
+                    </li>
+
+                    <li *ngIf="orderHistory[selectedOrder]?.proxy_phone_number && settings?.is_number_masking_enable">
+                      <div class="row no-gutters word-break">
+                        <div class="col-md-5 col-6" @fade>{{'Phone No.'| translate}}</div>
+                        <div class="col-md-7 col-6 word" @fade>
+                          {{orderHistory[selectedOrder]?.proxy_phone_number || 'N/A'}}
+                        </div>
+                      </div>
+                    </li>
+
+
+
+                    <!-- <li>
+                    <div class="row word-break">
+                      <div class="col-md-4" @fade>Experience</div>
+                      <div class="col-md-8 word" @fade>{{orderHistory[selectedOrder]?.agent[0]?.experience}}</div>
+                    </div>
+                  </li> -->
+                    <!-- <li>
+                    <div class="row word-break">
+                      <div class="col-md-4" @fade>Occupation</div>
+                      <div class="col-md-8 word capitalize" @fade>{{orderHistory[selectedOrder]?.agent[0]?.occupation}}
+                      </div>
+                    </div>
+                  </li> -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!isEditOrder">
+              <div class="track_order_outter_detail"
+                *ngIf="settings?.enable_agent_leave_notes && orderHistory[selectedOrder]?.status==5 &&
+               (orderHistory[selectedOrder]?.agent[0]?.left_with_picture_url || orderHistory[selectedOrder]?.agent[0]?.order_left_reason)"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <h3 [style.color]="style.baseColor" @fade>{{'DELIVERY INFORMATION' | translate}}</h3>
+                <div class="billing-info" *ngIf="orderHistory.length > 0">
+                  <h5 [style.color]="style.baseColor"
+                    *ngIf="orderHistory[selectedOrder]?.agent[0]?.left_with_picture_url" @fade>
+                    <p>
+                      <b>
+                        <span class="image_view"
+                          (click)="downloadReceipt(orderHistory[selectedOrder]?.agent[0]?.left_with_picture_url)">
+                          {{'View Left Image'}}
+                        </span>
+                      </b>
+                    </p>
+                  </h5>
+                  <h5 [style.color]="style.baseColor" style="font-size: 15px; font-weight: 600;"
+                    *ngIf="orderHistory[selectedOrder]?.agent[0]?.order_left_reason" @fade>
+                    {{'Order Left Reason' | translate}} :
+                    <strong>
+                      <span>{{orderHistory[selectedOrder]?.agent[0]?.order_left_reason || 'N/A'}}</span>
+                    </strong>
+                  </h5>
+                </div>
+              </div>
+
+
+
+              <div class="track_order_outter_detail"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <h3 [style.color]="style.baseColor" @fade>{{'BILLING INFORMATION' | translate}}</h3>
+
+                <div class="billing-info" *ngIf="orderHistory.length > 0">
+
+                  <h5 [style.color]="style.baseColor"
+                    *ngIf="orderHistory[selectedOrder]?.is_cutlery_required && settings?.enable_cutlery_option" @fade>
+                    {{'cutlery_option' | localization | translate}}:
+                    <strong>
+                      <span>{{orderHistory[selectedOrder]?.is_cutlery_required?'Yes':'No'}}</span>
+                    </strong>
+                  </h5>
+
+                  <h5 [style.color]="style.baseColor"
+                    *ngIf="orderHistory[selectedOrder]?.no_touch_delivery && settings?.enable_no_touch_delivery" @fade>
+                    {{'No Touch Delivery?' | translate}} :
+                    <strong>
+                      <span>{{orderHistory[selectedOrder]?.no_touch_delivery?'Yes':'No'}}</span>
+                    </strong>
+                  </h5>
+
+
+                  <h5 [style.color]="style.baseColor" *ngIf="orderHistory[selectedOrder]?.admin_price_update_receipt"
+                    @fade>
+                    <p>
+                      <b>
+                        <span class="image_view"
+                          (click)="downloadReceipt(orderHistory[selectedOrder]?.admin_price_update_receipt)">
+                          {{'View Receipt'}}
+                        </span>
+                      </b>
+                    </p>
+                  </h5>
+
+                  <h5 [style.color]="style.baseColor" style="font-size: 15px; font-weight: 600;"
+                    *ngIf="orderHistory[selectedOrder]?.agent_verification_code && settings?.agent_verification_code_enable == '1'"
+                    @fade>
+                    {{'Agent Verification Code' | translate}} :
+                    <strong>
+                      <span>{{orderHistory[selectedOrder]?.agent_verification_code}}</span>
+                    </strong>
+                  </h5>
+
+
+                  <h5 [style.color]="style.baseColor" *ngIf="(settings?.app_type == 1 || orderHistory[selectedOrder]?.type == 1) && 
+                    !settings?.enable_supplier_express_schedule_delivery_provide" @fade>
+                    {{'delivery_mode' | localization | translate}}:
+                    <strong *ngIf="orderHistory[selectedOrder]?.self_pickup == 1">{{'Self pickup' | translate}}</strong>
+                    <strong *ngIf="orderHistory[selectedOrder]?.self_pickup == 0">{{settings?.is_enable_delivery_type ==
+                      1 ? (orderHistory[selectedOrder]?.order_delivery_type == 1 ? 'Express Delivery' : 'Normal
+                      Delivery') : 'Delivery' | translate}}</strong>
+                    <strong *ngIf="orderHistory[selectedOrder]?.self_pickup == 3">{{'dine_in' | localization |
+                      translate}}</strong>
+                  </h5>
+
+                  <h5 [style.color]="style.baseColor" @fade>
+                    <label class="parameter">{{'payment_mode' | localization | translate}}:</label>
+                    <label class="detail float-right" >{{orderHistory[selectedOrder]?.payment_type == 3 ? 'None' :
+                      (orderHistory[selectedOrder]?.payment_type == 2 ? 'Free' :
+                      (orderHistory[selectedOrder]?.payment_type == 0 ? (orderHistory[selectedOrder]?.self_pickup == 1 ?
+                      ('cash_on_pickup' | localization | translate) : ('cod' | localization | translate)) : 'Online' |
+                      localization: orderHistory[selectedOrder]?.type)) | translate}}<span
+                        *ngIf="orderHistory[selectedOrder]?.payment_source">
+                        ({{orderHistory[selectedOrder]?.payment_source}})</span>
+                    </label>
+                    <strong>
+                      <span *ngIf="orderHistory[selectedOrder].payment_type === 5">
+                        Out of platform
+                      </span>
+                    </strong>
+                  </h5>
+
+                  <h5 *ngIf="orderHistory[selectedOrder]?.payment_type == 0 && settings?.is_coin_exchange == 1"
+                    [style.color]="style.baseColor" @fade>
+                    {{'Change in Request' | translate}} :
+                    <strong>{{orderHistory[selectedOrder]?.have_coin_change?'Yes':'No' }}
+                    </strong>
+                  </h5>
+
+                  <ul class="bill-list mt-2" [style.color]="style.baseColor">
+
+                    <li [style.color]="style.baseColor"
+                      *ngIf="settings?.enable_supplier_express_schedule_delivery_provide==1" @fade>
+                      {{'Delivery Type' | translate}} :
+                      <span>
+                        <strong *ngIf="orderHistory[selectedOrder]?.express_delivery_charges >0">
+                          {{'Express Delivery'}}
+                        </strong>
+                        <strong *ngIf="!orderHistory[selectedOrder]?.express_delivery_charges">
+                          {{'Scheduled Delivery'}}</strong>
+                      </span>
+
+                      <p class="mb-0" *ngIf="orderHistory[selectedOrder]?.express_delivery_charges >0"
+                        style="font-size: 12px;">
+                        <small [style.color]="style.primaryColor">
+                          <b> Your order will be delivered within 2 hours with a delivery fee
+                            {{orderHistory[selectedOrder]?.express_delivery_charges}} {{currency}}</b>
+                        </small>
+                      </p>
+                    </li>
+
+                    <li @fade> <label class="parameter"> {{'sub_total' | localization | translate}}:</label>
+                     
+                        <label class="detail float-right"> {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.total_order_price*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length) | number :
+                          settings?.addon_decimal_value}}</label>
+                    </li>
+
+                    <li *ngIf="orderHistory[selectedOrder]?.promoCode && orderHistory[selectedOrder]?.discountAmount"
+                      @fade>{{'Discount' | translate}} -
+                      <small class="uppercase"> ({{orderHistory[selectedOrder]?.promoCode}})</small><span> <strong> -
+                          {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.discountAmount*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li
+                      *ngIf="orderHistory[selectedOrder]?.promoCode && !orderHistory[selectedOrder]?.discountAmount && freeProductQuantity"
+                      @fade>{{'Offer Applied' | translate}} -
+                      <small class="uppercase"> ({{orderHistory[selectedOrder]?.promoCode}})</small><span> <strong>
+                          {{freeProductQuantity}} {{'Free ' + ('product' | localization:
+                          orderHistory[selectedOrder]?.type | translate)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="orderHistory[selectedOrder]?.gift_amount" @fade>{{'Discount' | translate}} -
+                      <small class="uppercase"> </small><span> <strong> -
+                          {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{orderHistory[selectedOrder]?.discountAmount}}</strong></span>
+                    </li>
+                    <li *ngIf="orderHistory[selectedOrder]?.wallet_discount_amount" @fade>
+                      {{'Wallet Discount' | translate}} -
+                      <small class="uppercase"> </small><span> <strong> -
+                          {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{orderHistory[selectedOrder]?.discountAmount}}</strong></span>
+                    </li>
+
+                    <li
+                      *ngIf="orderHistory[selectedOrder]?.self_pickup == 0  && orderHistory[selectedOrder].type != 8 && settings?.app_type != 8"
+                      @fade>
+                      {{'delivery_charges' | localization | translate}}:
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.delivery_charges*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length) | number :
+                          settings?.addon_decimal_value}}</strong></span>
+                    </li>
+                    <li *ngIf="orderHistory[selectedOrder]?.self_pickup == 0  && orderHistory[selectedOrder].type != 8 && 
+                      settings?.app_type != 8 && settings?.enable_supplier_express_schedule_delivery_provide==1 &&
+                      orderHistory[selectedOrder]?.express_delivery_charges>0" @fade>
+                      {{'Express Delivery Charges' | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.express_delivery_charges*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li
+                      *ngIf="orderHistory[selectedOrder]?.addOn && (orderHistory[selectedOrder].type == 8 || settings?.app_type == 8)"
+                      @fade>
+                      {{'AddOn Charges' | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{orderHistory[selectedOrder]?.addOn?.toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li *ngIf="settings?.disable_tax == 0 && settings?.exclude_tax_in_total == 0" @fade><label class="parameter">{{'tax' |
+                      localization | translate}}:</label>
+                      <label class="detail float-right">{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.handling_admin*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}</label>
+                    </li>
+                    <li *ngIf="settings?.show_agent_extra_charge == 1 ||
+                     orderHistory[selectedOrder]?.product[selectedOrder].agent_extra_charge" @fade> 
+                      <label class="parameter">  {{'Agent Charge' | translate}}</label>
+                      <span>
+
+                       <label class="detail"style="font-weight: lighter;" >
+                        {{orderHistory[selectedOrder]?.local_currency || currency}}
+                          {{((orderHistory[selectedOrder]?.product[selectedOrder].agent_extra_charge
+                            ? orderHistory[selectedOrder]?.product[selectedOrder].agent_extra_charge :
+                            orderHistory[selectedOrder]?.agent_extra_charge*1)*
+                            selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}
+                        </label>
+                      </span>
+                    </li>
+                    <li *ngIf="settings?.show_agent_extra_charge == 1 || 
+                    orderHistory[selectedOrder]?.product[selectedOrder].agent_extra_charge " @fade>
+                     <label class="parameter"> {{'Agent Charge Reason' | translate}}</label>
+                      <span>
+                        <label class="detail" class="float-right">
+                          {{orderHistory[selectedOrder]?.agent_extra_charge_reason}}
+                        </label>
+                      </span>
+                    </li>
+                    <li *ngIf="orderHistory[selectedOrder].tip_agent" @fade>
+                      {{'agent' | localization: orderHistory[selectedOrder]?.type}} {{'tip' | localization}}:
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(orderHistory[selectedOrder]?.tip_agent).toFixed(settings?.price_decimal_length) | number :
+                          settings?.addon_decimal_value}}</strong></span>
+                    </li>
+                    <li *ngIf="orderHistory[selectedOrder].slot_price && settings?.is_schdule_order == 1" @fade>
+                      {{'slot_price' | localization | translate}}:
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(orderHistory[selectedOrder]?.slot_price).toFixed(settings?.price_decimal_length) | number :
+                          settings?.addon_decimal_value}}</strong></span>
+                    </li>
+                    <li
+                      *ngIf="orderHistory[selectedOrder].slot_price && settings?.is_schdule_order == 1 && settings?.table_book_mac_theme == 1"
+                      @fade>
+                      Table Booking Discount
+                      <span><strong>- {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(orderHistory[selectedOrder]?.slot_price).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li *ngIf="settings?.referral_feature == 1 && orderHistory[selectedOrder].referral_amount" @fade>
+                      {{'Referral Discount' | translate}}
+                      <span><strong>- {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.referral_amount*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="settings?.is_loyality_enable == 1 && orderHistory[selectedOrder].loyality_point_discount"
+                      @fade>
+                      {{'Loyalty Discount' | translate}}
+                      <span><strong>- {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.loyality_point_discount*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="settings?.supplier_service_fee == 1 && orderHistory[selectedOrder].user_service_charge"
+                      @fade>
+                      {{'supplier_service_fee' | localization | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.user_service_charge*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+
+                    <li *ngIf="orderHistory[selectedOrder]?.admin_updated_charge" @fade>
+                      {{'Updated Charge' | translate}}
+                      <span>
+                        <strong>
+                          {{orderHistory[selectedOrder]?.is_subtotal_add==0?'-':'+'}}
+                          {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{orderHistory[selectedOrder]?.admin_updated_charge.toFixed(2)}}
+                        </strong>
+                      </span>
+                    </li>
+
+                    <li
+                      *ngIf="settings?.enable_liquor_popup == 1 && orderHistory[selectedOrder]?.liquor_bottle_deposit_tax"
+                      @fade>{{'Bottle Deposit' | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{
+                          ((orderHistory[selectedOrder]?.liquor_bottle_deposit_tax*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                          }}</strong></span>
+                    </li>
+                    <li
+                      *ngIf="settings?.enable_liquor_popup == 1 && orderHistory[selectedOrder]?.liquor_plt_deposit_tax"
+                      @fade>{{'PLT' | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{
+                          ((orderHistory[selectedOrder]?.liquor_plt_deposit_tax*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                          }}</strong></span>
+                    </li>
+
+                    <li *ngIf="settings?.enable_federal_provincial_tax == 1 && orderHistory[selectedOrder]?.federal_tax">{{'Federal Tax' | translate}}
+                      <span><div class="div_inline" *ngIf="settings?.show_currency_after_amount == 0">{{orderHistory[selectedOrder]?.local_currency || currency }}</div>
+                          {{
+                          ((orderHistory[selectedOrder]?.federal_tax*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                          }}<span *ngIf="settings?.show_currency_after_amount == 1">&nbsp;{{currency}}</span></span>
+                    </li>
+
+                    <li *ngIf="settings?.enable_federal_provincial_tax == 1 && orderHistory[selectedOrder]?.provincial_tax">{{'Provincial Tax' | translate}}
+                        <span><div class="div_inline" *ngIf="settings?.show_currency_after_amount == 0">{{orderHistory[selectedOrder]?.local_currency || currency }}</div>
+                            {{
+                            ((orderHistory[selectedOrder]?.provincial_tax*1)*selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)
+                            }}<span *ngIf="settings?.show_currency_after_amount == 1">&nbsp;{{currency}}</span></span>
+                    </li>
+
+                    <li
+                      *ngIf="settings?.enable_extra_product_service == 1 && orderHistory[selectedOrder]?.extraProduct.length && orderHistory[selectedOrder]?.extraProduct[0].confirmed_by_user == 1"
+                      @fade>
+                      {{('extra_product' | localization) + ' Price' | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{orderHistory[selectedOrder]?.total_extra_product_price?.toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li @fade><label class="parameter">{{'net_total' | localization | translate}}:</label>
+                      <label 
+                        *ngIf="settings.is_currency_exchange_rate == 1 && orderHistory[selectedOrder].currency_exchange_rate"> 
+                        ( XR:
+                        {{currency}} 1 = {{orderHistory[selectedOrder]?.local_currency || currency }}
+                        {{orderHistory[selectedOrder]?.currency_exchange_rate}} ) </label>
+                        <label class="detail float-right">
+                        {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{((orderHistory[selectedOrder]?.net_amount*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length) | number :
+                          settings?.addon_decimal_value}}
+                          </label>
+                      <span *ngIf="settings?.enable_vat_inclusions==1" class="vat mr-1" [style.color]="style.baseColor">
+                        <small>(Inclusive of VAT)</small>
+                      </span>
+                    </li>
+
+                    <li @fade *ngIf="settings?.show_agent_extra_charge == 1">
+                      {{orderHistory[selectedOrder]?.paid_agent_extra_charge == 0 &&
+                      orderHistory[selectedOrder]?.agent_extra_charge != 0 ? "Charges to be paid" : ""}}
+                      <span
+                        *ngIf="orderHistory[selectedOrder]?.paid_agent_extra_charge == 0 && orderHistory[selectedOrder]?.agent_extra_charge != 0">
+                        <strong >{{orderHistory[selectedOrder]?.local_currency || currency}}
+                          {{((orderHistory[selectedOrder]?.agent_extra_charge*1)*
+                          selected_currency?.conversion_rate).toFixed(settings?.price_decimal_length)}}
+                        </strong>
+                      </span>
+                    </li>
+
+                    <li
+                      *ngIf="orderHistory[selectedOrder]?.refund_amount && orderHistory[selectedOrder]?.payment_type != 0"
+                      @fade>Refund Amount
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(orderHistory[selectedOrder]?.refund_amount).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="orderHistory[selectedOrder]?.remaining_amount" @fade>Remaining Amount
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(orderHistory[selectedOrder]?.remaining_amount).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+
+            <div *ngIf="isEditOrder">
+              <div class="track_order_outter_detail"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <h3 [style.color]="style.baseColor" @fade>{{'BILLING INFORMATION' | translate}}</h3>
+
+                <div class="billing-info" *ngIf="orderHistory.length > 0">
+                  <h5 [style.color]="style.baseColor" @fade>
+                    {{'Payment Mode' | translate}} :
+                    <strong>{{editOrder?.payment_type == 3 ? 'None' : (editOrder?.payment_type == 2 ? 'Free' :
+                      (editOrder?.payment_type == 0 ? 'Cash' : 'Online' | localization: editOrder?.type)) |
+                      translate}}<span *ngIf="editOrder?.payment_source">
+                        ({{editOrder?.payment_source}})</span>
+                    </strong>
+                  </h5>
+
+                  <h5 [style.color]="style.baseColor"
+                    *ngIf="orderHistory[selectedOrder]?.agent_verification_code && settings?.agent_verification_code_enable == 1"
+                    @fade>
+                    {{'Agent Verification Code' | translate}} :
+                    <strong>
+                      <span>{{orderHistory[selectedOrder]?.agent_verification_code}}</span>
+                    </strong>
+                  </h5>
+
+                  <h5 *ngIf="editOrder?.payment_type == 0 && settings?.is_coin_exchange == 1"
+                    [style.color]="style.baseColor" @fade>
+                    {{'Change in Request' | translate}} :
+                    <strong>{{editOrder?.have_coin_change?'Yes':'No' }}
+                    </strong>
+                  </h5>
+
+                  <ul class="bill-list" [style.color]="style.baseColor">
+                    <li @fade>{{'Sub Total' | translate}}<span>
+                        <strong >{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(editOrder?.total_order_price).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li *ngIf="editOrder?.promoCode" @fade>{{'Discount' | translate}} -
+                      <small class="uppercase"> ({{editOrder?.promoCode}})</small><span> <strong> -
+                          {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.discountAmount}}</strong></span>
+                    </li>
+                    <li *ngIf="editOrder?.gift_amount" @fade>{{'Discount' | translate}} -
+                      <small class="uppercase"> </small><span> <strong> -
+                          {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.discountAmount}}</strong></span>
+                    </li>
+                    <li *ngIf="editOrder?.wallet_discount_amount" @fade>
+                      {{'Wallet Discount' | translate}} -
+                      <small class="uppercase"> </small><span> <strong> -
+                          {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.discountAmount}}</strong></span>
+                    </li>
+
+                    <li *ngIf="editOrder?.self_pickup == 0 && editOrder.type != 8 && settings?.app_type != 8" @fade>
+                      {{'Delivery Charges' | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.delivery_charges?.toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li *ngIf="editOrder?.addOn && (editOrder.type == 8 || settings?.app_type == 8)" @fade>
+                      {{'AddOn Charges' | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.addOn?.toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li *ngIf="settings?.disable_tax == 0 && settings?.exclude_tax_in_total == 0" @fade>{{'tax' |
+                      localization | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(editOrder?.handling_admin +
+                          editOrder?.handling_supplier).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li *ngIf="editOrder?.tip_agent" @fade>
+                      {{'agent' | localization: editOrder?.type}} {{'tip' | localization}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(editOrder?.tip_agent).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li *ngIf="editOrder?.slot_price && settings?.is_schdule_order == 1" @fade>
+                      Slot Price
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(editOrder?.slot_price).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                    <li *ngIf="settings?.referral_feature == 1 && editOrder.referral_amount" @fade>
+                      {{'Referral Discount' | translate}}
+                      <span><strong>- {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.referral_amount?.toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="settings?.is_loyality_enable == 1 && editOrder.loyality_point_discount" @fade>
+                      {{'Loyalty Discount' | translate}}
+                      <span><strong>- {{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.loyality_point_discount?.toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="settings?.supplier_service_fee == 1 && editOrder.user_service_charge" @fade>
+                      {{'supplier_service_fee' | localization | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.user_service_charge?.toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="settings?.supplier_service_fee == 1 && editOrder.user_service_charge" @fade>
+                      {{'supplier_service_fee' | localization | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{editOrder?.user_service_charge?.toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li @fade>{{'Net Total' | translate}}
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(editOrder?.net_amount).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="editOrder?.refund_amount  && orderHistory[selectedOrder]?.payment_type != 0" @fade>
+                      Refund
+                      Amount
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(editOrder?.refund_amount).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+
+                    <li *ngIf="editOrder?.remaining_amount" @fade>Remaining Amount
+                      <span><strong>{{orderHistory[selectedOrder]?.local_currency || currency }}
+                          {{(editOrder?.remaining_amount).toFixed(settings?.price_decimal_length)}}</strong></span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+
+            <div>
+              <div *ngIf="orderHistory[selectedOrder].status == 8 && orderHistory[selectedOrder].refund_amount"
+                class="track_order_outter_detail"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <h3 class="mb-0" [style.color]="style.baseColor" @fade>{{'Refund Amount' | translate}}: <span
+                    class="float-right">{{orderHistory[selectedOrder]?.local_currency || currency }}
+                    {{orderHistory[selectedOrder].refund_amount}}</span> </h3>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!--================ End Product Result Page ================-->
+  </div>
+
+  <app-order-supplier-products *ngIf="isAddItems" [settings]="settings" [style]="style"
+    [orderType]="orderHistory[selectedOrder].type || settings.app_type"
+    [supplierId]="this.orderHistory[selectedOrder]?.supplier_id" [selectedProducts]="editOrder.products"
+    (onBack)="isAddItems = false" (onAdd)="onProductAdd($event)">
+  </app-order-supplier-products>
+</ng-container>
+
+
+<!-- The Modal -->
+<div class="modal fade" id="walletRefund">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Refund <span *ngIf="!hideRefundPaymentOptions">Payment To</span></h4>
+        <button type="button" class="close" data-dismiss="modal" (click)="isReturnProduct = false"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form>
+          <div class="form-group" *ngIf="settings.enable_refund_request_category == 1">
+            <select class="form-control" [(ngModel)]="returnCategory" name="returnCategory">
+              <option value="" selected disabled>Select</option>
+              <option *ngFor="let data of returnCategoryList" value="{{data}}">{{data}}</option>
+            </select>
+          </div>
+
+          <div *ngIf="isReturnProduct" class="form-group">
+            <label for="comment">Reason</label>
+            <textarea class="form-control" rows="5" id="comment" name="reason"
+              [(ngModel)]="returnProductReason"></textarea>
+          </div>
+          <div class="form-check-inline" *ngIf="!hideRefundPaymentOptions">
+            <label class="form-check-label" for="radio1">{{'Initial Payment Source' | translate}}
+              <input type="radio" class="form-check-input" id="radio1" name="refund" [value]="0"
+                [(ngModel)]="refundToWallet" [checked]="!refundToWallet"><span class="check-span"></span>
+            </label>
+          </div>
+          <div class="form-check-inline" *ngIf="!hideRefundPaymentOptions">
+            <label class="form-check-label" for="radio2">{{'Wallet' | translate}}
+              <input type="radio" class="form-check-input" id="radio2" name="refund" [value]="1"
+                [(ngModel)]="refundToWallet" [checked]="refundToWallet">
+              <span class="check-span"></span>
+            </label>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal"
+          (click)="isReturnProduct ? returnProductRequest() : cancelOrder(orderHistory[selectedOrder])">Submit</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"
+          (click)="isReturnProduct = false">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<ng-template #skeleton>
+
+  <div class="skeleton">
+    <div class="page_breadcrumb" [style.background-color]="style.backgroundColor">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <p></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--================ End Page Breadcrumb Page ================-->
+
+    <section class="product_result_body">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8">
+            <h4 class="mb-4"> </h4>
+          </div>
+          <div class="col-md-4">
+            <a></a>
+          </div>
+        </div>
+
+        <!------------------------------ Supplier Detail Start ---------------------------------->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="order-supplier"
+              [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+              <div class="supplier-info">
+                <h2 [ngStyle]="{'height': '32px'}"></h2>
+                <p [ngStyle]="{'height': '16px'}"></p>
+                <h5 [ngStyle]="{'height': '14px'}"></h5>
+              </div>
+              <div class="order-status">
+                <h4 [ngStyle]="{'height': '22px', 'width': '100px', 'float': 'right' }"></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!------------------------------ Supplier Detail End ---------------------------------->
+
+        <div class="row">
+          <div class="col-md-8">
+            <div *ngFor="let data of util.generateFakeList(2);trackBy:trackByUtilGenerateFn">
+              <div class="track_order_outter food_track_order_outer"
+                [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+                <div class="track_order_name_detail">
+                  <span class="track_order_img">
+                    <img>
+                  </span>
+                  <div class="track_order_name">
+                    <h2 [ngStyle]="{'height': '22px'}"></h2>
+                    <h4 [ngStyle]="{'height': '14px','width': '150px'}">
+                    </h4>
+                  </div>
+                  <div class="tracker_order_price">
+                    <h3 [ngStyle]="{'height': '22px', 'width': '100px','float': 'right'}"></h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="track_order_outter_detail"
+              [ngStyle]="{'background-color':style.cardBackgroundColor, 'border-color': style.secondaryColor}">
+              <h3></h3>
+              <ng-container>
+                <h6><strong></strong></h6>
+                <address [style.color]="style.baseColor">
+                  <p></p>
+                  <p></p>
+                </address>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</ng-template>
+
+
+<div class="modal fade" id="dhl_status">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">DHL Shipment Status</h4>
+        <button type="button" class="close" data-dismiss="modal"></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <ul *ngIf="dhlData">
+          <li>AWB No. : {{dhlData?.AWBNumber}}</li>
+          <li>Consignee Name : {{dhlData?.ShipmentInfo?.ConsigneeName}}</li>
+          <li>Consignee Address : {{dhlData?.ShipmentInfo?.Consignee?.City}},
+            {{dhlData?.ShipmentInfo?.Consignee?.CountryCode}}, {{dhlData?.ShipmentInfo?.Consignee?.PostalCode}}</li>
+          <li>Pieces : {{dhlData?.ShipmentInfo?.Pieces}}</li>
+          <li>Weight : {{dhlData?.ShipmentInfo?.Weight}}{{dhlData?.ShipmentInfo?.WeightUnit}}</li>
+          <li>Shipment Date : {{dhlData?.ShipmentInfo?.ShipmentDate | date: 'medium'}}</li>
+          <li>Shipment Description : {{dhlData?.ShipmentInfo?.ShipmentDesc}}</li>
+          <li>Status : {{dhlData?.ShipmentInfo?.ShipmentEvent?.ServiceEvent?.Description}}
+            ({{dhlData?.ShipmentInfo?.ShipmentEvent?.ServiceEvent?.EventCode}})</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<app-order-review-extra-product *ngIf="openExtraProductUpdate" [details]="extra_product_details" [style]="style"
+  (closeExtraProductViewer)="closeExtraProductViewer($event)"></app-order-review-extra-product>
+
+<app-image-viewer *ngIf="openImageViewer" [viewImage]="imageToView" (closeImageViewer)="closeImageViewer($event)">
+
+</app-image-viewer>
+<app-video-player *ngIf="openVideoPlayer" [videoUrl]="videoToPlay" (closeVideoPlayer)="closeVideoPlayer($event)">
+
+</app-video-player>
+
+
+<app-special-instruction *ngIf="is_special_instruction" [special_instructions]="special_instructions"
+  [only_viewing]="true" [style]="style" [settings]="settings" (onProcess)="onProcessSpecialInstruction($event)">
+</app-special-instruction>
+
+<app-online-payment [settings]="settings" [order]="payOnlineOrder" *ngIf="isPayOnline"
+  [geofencedGateways]="geofencedGateways" (onError)="onPaymentError()" (onClose)="isPayOnline = $event"
+  (onSuccess)="onPaymentSuccess($event)">
+</app-online-payment>
+
+<app-rating-reviews *ngIf="isRatingReviews" [style]="style" [settings]="settings" [ratingReviews]="ratingReviews"
+  (onClose)="onCloseEvent($event)">
+</app-rating-reviews>
+
+
+
+
+
+
+­

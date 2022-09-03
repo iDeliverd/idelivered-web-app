@@ -1,0 +1,9 @@
+li {
+    list-style: none;
+}
+.dropdown-toggle::after {
+    display: none !important;
+}
+.menu_link {
+    height: 35px !important;
+}

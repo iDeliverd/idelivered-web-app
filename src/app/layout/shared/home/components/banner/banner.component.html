@@ -1,0 +1,146 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+  <ng-template [ngSwitchCase]="3" *ngIf="settings?.app_type == 2">
+    <div class="banner" [style.direction]="'ltr'" [style.height]="banner_height" *ngIf="!isLoading">
+      <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+        <div ngxSlickItem *ngFor="let banner of banners; let i = index;trackBy:trackByBNFn;" class="slide">
+          <img class="banner-img" [height]="banner_height" alt="banner"
+            [ngClass]="{'pointer': banner.supplier_id && (settings.single_vendor_id == 0)}" appImage
+            [url]="banner?.website_image" [size]="'1500x375'" [src]="banner?.website_image" [old]="old_banner"
+            [noCrop]="settings?.is_crop_banner == 0 ? true : false"
+            onError="src = './assets/images/placeholder_image.svg';" (click)="viewSupplier(banner)"
+            [settings]="settings">
+        </div>
+      </ngx-slick-carousel>
+    </div>
+  </ng-template>
+
+
+  <ng-template [ngSwitchCase]="5">
+    <h1 title="banner" style="display: none;">Banner</h1>
+
+    <div class="banner" [style.direction]="'ltr'" [style.height]="banner_height" *ngIf="!isLoading">
+      <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+        <div ngxSlickItem *ngFor="let banner of banners; let i = index;trackBy:trackByBannersDataFn;" class="slide">
+          <img class="banner-img banner_wdth" [height]="banner_height" alt="banner"
+            [ngClass]="{'pointer': banner.supplier_id && (settings.single_vendor_id == 0)}" appImage
+            [url]="banner?.website_image" [size]="'1500x375'" [src]="banner?.website_image" [old]="old_banner"
+            [noCrop]="settings?.is_crop_banner == 0 ? true : false"
+            onError="src = './assets/images/placeholder_image.svg';" (click)="viewSupplier(banner)"
+            [settings]="settings">
+        </div>
+      </ngx-slick-carousel>
+    </div>
+    <div class="banner" *ngIf="isLoading">
+      <div class="skeleton">
+        <div style="height: 365px; background-color: #dedfe1"></div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !banners.length" class="banner-placeholder"></div>
+
+  </ng-template>
+
+
+  <!-- <ng-template [ngSwitchCase]="6">
+    <div class="banner" [style.direction]="'ltr'" [style.height]="banner_height" id="slider" *ngIf="!isLoading">
+      <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+        <div ngxSlickItem *ngFor="let banner of banners; let i = index;trackBy:trackByBannersDataFn;" class="slide p-0 g-0 mr-0">
+
+
+          <div class="item">
+          <div class="col-sm-12 p-0 g-0 mr-0 no-padding">
+            <img src="images/home/girl1.jpg" class="girl img-responsive" alt="" />
+            <img class="girl img-responsive" [height]="banner_height" alt="banner"
+              [ngClass]="{'pointer': banner.supplier_id && (settings.single_vendor_id == 0)}" appImage
+              [url]="banner?.website_image" [size]="'1500x375'" [old]="old_banner" [src]="banner?.website_image"
+              onError="src = './assets/images/placeholder_image.svg';" (click)="viewSupplier(banner)">
+            <div class="slider_txt">
+              <h3>Make Every</h3>
+              <a href="#">Shop now</a>
+            </div>
+          </div>
+          </div>
+        </div>
+      </ngx-slick-carousel>
+    </div>
+    <div class="banner" *ngIf="isLoading">
+      <div class="skeleton">
+        <div style="height: 365px; background-color: #dedfe1"></div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading && !banners.length" class="banner-placeholder"></div>
+
+  </ng-template> -->
+
+
+  <ng-template [ngSwitchCase]="3" *ngIf="settings?.app_type == 8">
+    <div class="banner">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 p-0">
+            <!-- <img src="assets/styles/saned_template/img/bbanner.png"> -->
+            <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+              <div ngxSlickItem *ngFor="let banner of banners; let i = index;trackBy:trackByBannersFn;" class="slide">
+                <img class="banner-img" [height]="banner_height" [noCrop]="settings?.is_crop_banner == 0 ? true : false"
+                  alt="banner" [ngClass]="{'pointer': banner.supplier_id && (settings.single_vendor_id == 0)}" appImage
+                  [old]="old_banner" [url]="is_mobile ? banner?.phone_image : banner?.website_image" [size]="size"
+                  [src]="banner?.website_image" onError="src = './assets/images/placeholder_image.svg';"
+                  (click)="viewSupplier(banner)" [settings]="settings">
+              </div>
+            </ngx-slick-carousel>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template ngSwitchDefault>
+    <div class="banner" [style.direction]="'ltr'" [style.height.px]="banner_height"
+      *ngIf="!isLoading && banners.length">
+      <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+        <div ngxSlickItem *ngFor="let banner of banners; let i = index;trackBy:trackByBannersFn;" class="slide">
+          <img class="banner-img" [style.height.px]="banner_height"
+            [noCrop]="settings?.is_crop_banner == 0 ? true : false" appImage
+            [url]="is_mobile ? banner?.phone_image : banner?.website_image" [size]="size" [old]="old_banner"
+            alt="banner" [ngClass]="{'pointer': banner.supplier_id && (settings.single_vendor_id == 0)}"
+            [src]="is_mobile ? banner?.phone_image : banner?.website_image"
+            onError="src = './assets/images/placeholder_image.svg';" (click)="viewSupplier(banner)"
+            [settings]="settings">
+          <div class="banner banner_shade" *ngIf="!is_mobile && settings?.enable_banner_shade"
+            [style.height.px]="banner_height">
+
+          </div>
+        </div>
+      </ngx-slick-carousel>
+
+      <section class="banner_prod_main col-md-12" *ngIf="settings?.enable_banner_title == 1 && !is_mobile">
+        <div class="container-fluid">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12 text-center">
+                <h5 class="banner_title">
+                  {{settings?.banner_title_text}}
+                </h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  
+    </div>
+
+    <div *ngIf="!isLoading && !banners.length" class="banner-placeholder"></div>
+  </ng-template>
+</ng-container>
+
+
+
+
+
+
+
+
+<!--================ End Home Banner =================-->

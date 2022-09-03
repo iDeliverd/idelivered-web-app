@@ -1,0 +1,90 @@
+<section class="loyalty">
+    <div class="container">
+
+        <div class="loyalty_heading">
+            <h1>{{'Loyalty Points' | translate}}</h1>
+        </div>
+
+        <div class="loyalty-inner">
+            <div *ngIf="loyaltyData?.total_loyality_points && (loyaltyData?.totalEarningPoint >= loyaltyData?.total_loyality_points); else noLoyalty">
+                <h4 class="name">{{loyaltyData?.name}}</h4>
+                <h6 class="description mb-4">{{loyaltyData?.description}}</h6>
+
+                <div class="loyalty-image">
+                    <img appImage [url]="loyaltyData?.image" [size]="'400x400'" [src]="loyaltyData?.image"
+                        [settings]="settings" onError="src = './assets/images/placeholder_image.svg';">
+                </div>
+            </div>
+
+            <ng-template #noLoyalty>
+                <div class="no-loyalty">
+                    <h6>{{'You Have Not Yet Earned A Loyalty Card.' | translate}}</h6>
+                    <p>{{'Place More' | translate}} {{'orders' | localization | translate}} {{'And Keep Earning Points
+                        To Avail Amazing Discounts' | translate}}</p>
+                </div>
+            </ng-template>
+
+            <div class="points-outer">
+                <h3 class="points">{{loyaltyData?.totalEarningPoint || 0}}</h3>
+                <p>{{'Total Loyalty Points Earned' | translate}}</p>
+            </div>
+
+            <div class="points-outer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="points"><span
+                                *ngIf="settings?.show_currency_after_amount == 0">{{currency}}</span>{{(loyaltyData?.totalPointAmountEarned
+                            || 0)?.toFixed(2)}}<span
+                                *ngIf="settings?.show_currency_after_amount == 1">{{currency}}</span></h3>
+                        <p>{{'Total Amount Earned' | translate}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 class="points"><span
+                                *ngIf="settings?.show_currency_after_amount == 0">{{currency}}</span>{{(loyaltyData?.leftPointAmount
+                            || 0)?.toFixed(2)}}<span
+                                *ngIf="settings?.show_currency_after_amount == 1">{{currency}}</span></h3>
+                        <p>{{'Remaining Amount' | translate}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loyalty-middle" *ngIf="nextLoyaltyLevel.length">
+            <!-- <button type="button" class="invite-btn btn">Invite Friends</button> -->
+            <h5 style="margin-bottom: 25px;">{{'Your Upcoming Loyalty Levels' | translate}}</h5>
+            <div class="row">
+                <div class="col-md-3" *ngFor="let loyalty of nextLoyaltyLevel">
+                    <div class="next">
+                        <img class="nxt-img" appImage [url]="loyalty?.image" [size]="'300x300'" [src]="loyalty?.image"
+                            [settings]="settings" onError="src = './assets/images/placeholder_image.svg';">
+                        <h5>{{loyalty?.name}}</h5>
+                        <h6>{{'Points' | translate}} : {{loyalty?.total_loyality_points}}</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loyalty-bottom" *ngIf="activity.length">
+            <h3>{{'Recent Activity' | translate}}</h3>
+            <ul class="loyalty-list">
+                <li *ngFor="let loyalty of activity">
+                    <h6 *ngIf="loyalty?.used_loyality_point_amount <= 0">{{'You Earned' | translate}}
+                        {{loyalty.earned_points ? loyalty.earned_points:1}} {{'point'| translate}}</h6>
+                    <h6 *ngIf="loyalty?.used_loyality_point_amount > 0">{{'Amount Spent' | translate}} :
+                        <span
+                            *ngIf="settings?.show_currency_after_amount == 0">{{currency}}</span>{{(loyalty?.used_loyality_point_amount).toFixed(2)}}<span
+                            *ngIf="settings?.show_currency_after_amount == 1">{{currency}}</span>
+                    </h6>
+                    <p style="margin-bottom: 0px;" *ngIf="loyalty?.used_loyality_point_amount <= 0">{{'Amount Earned' |
+                        translate}} :
+                        <span
+                            *ngIf="settings?.show_currency_after_amount == 0">{{currency}}</span>{{(loyalty?.earned_amount).toFixed(2)}}<span
+                            *ngIf="settings?.show_currency_after_amount == 1">{{currency}}</span>
+                    </p>
+                    <p>{{'order' | localization | translate}} {{'no.' | translate }} : {{loyalty?.order_id}}</p>
+                    <!-- <p *ngIf="loyalty?.used_loyality_point_amount > 0">Amount Spent : {{currency}}{{(loyalty?.used_loyality_point_amount).toFixed(2)}}</p> -->
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>

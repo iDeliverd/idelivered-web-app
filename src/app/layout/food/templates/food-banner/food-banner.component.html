@@ -1,0 +1,32 @@
+<app-banner></app-banner>
+
+
+<section id="gernal-product-slider" style="padding-bottom: 0px;"
+    *ngIf="[1,2,3,4,5].includes(settings?.selected_template) && !is_mobile">
+    <div class="container">
+        <div class="home-search" id="home_search" style="margin-top: -16px;">
+            <div class="row">
+                <div class="col-md-5">
+                    <app-location [settings]="settings"></app-location>
+                </div>
+                <div class="col-md-7">
+                    <app-search [settings]="settings" [style]="style"></app-search>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container" *ngIf="settings?.enable_sub_banners">
+    <div class="row">
+        <div class="col-md-6">
+            <app-sub-banner></app-sub-banner>
+        </div>
+        <div class="col-md-6">
+            <app-sub-banner></app-sub-banner>
+        </div>
+    </div>
+</div>
+
+
+<app-banner-video *ngIf="settings?.enable_video_in_banner"></app-banner-video>

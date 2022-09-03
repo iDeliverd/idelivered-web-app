@@ -1,0 +1,57 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="1">
+
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="2">
+        <div class="container-fluid mt-1 mb-5">
+            <div class="row">
+                <div class="container-fluid">
+                    <div class="col-12">
+                        <h2 class="pl-5 pb-5 fnt_wt_600">Top Service Providers Near You</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <ng-container *ngIf="!isLoading; else skeleton2">
+                        <div class="col-lg-4 list-4"
+                            *ngFor="let supplier of allSuppliers.slice(0,6);trackBy:trackBySuppFn">
+                            <img appImage [url]="supplier?.logo" [size]="'440x400'" [src]="supplier?.logo"
+                                [settings]="settings" onError="src = '/assets/images/placeholder_image.svg';">
+                            <a class="supplier_name_ls">
+                                <h6 class="white small_t" (click)="productList(supplier)">{{supplier?.name}}</h6>
+                            </a>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #skeleton2>
+                        <div class="skeleton col-md-6"
+                            *ngFor="let supplier of util.generateFakeList(4);trackBy:trackByFakeListFn">
+                            <app-supplier-skeleton [style]="style" [settings]="settings">
+                            </app-supplier-skeleton>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+
+    <ng-template [ngSwitchCase]="3">
+
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="4">
+
+    </ng-template>
+
+
+    <ng-template [ngSwitchCase]="5">
+
+    </ng-template>
+
+
+</ng-container>

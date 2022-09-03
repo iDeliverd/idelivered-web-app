@@ -1,0 +1,27 @@
+<section *ngIf="currentUrl=='/'" style="border-top: 1px solid #ddd;" class="pt-2 pb-2 text-center fixed-categories">
+    <div class="container top-nav-category" [ngClass]="window.pageYOffset > 100 ? 'without-img': ''">
+        <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig">
+            <div ngxSlickItem class="d-inline-block mr-3 text-center" *ngFor="let category of foodCategoryList">
+                <a (click)="onCategorySelect(category)">
+
+                    <img class="circle" appImage [url]="category.image" [size]="'60x48'" [src]="category.image"
+                        [settings]="settings" onError="src = './assets/images/placeholder_image.svg';">
+                    <p class="change-font">{{category.name}}</p>
+                </a>
+            </div>
+        </ngx-slick-carousel>
+    </div>
+</section>
+
+<section *ngIf="currentUrl!='/'" style="border: 1px solid #ddd;" class="pt-2 pb-2 mb-4 text-center">
+    <div class="container top-nav-category">
+        <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig1">
+            <div ngxSlickItem class="d-inline-block text-center catdv"
+                [class.selected]="selectedCategory.name==category.name" *ngFor="let category of foodCategoryList">
+                <a (click)="onCategorySelect(category)">
+                    <p *ngIf="selectedCategory" class="change-font pt-2 pb-2">{{category.name}}</p>
+                </a>
+            </div>
+        </ngx-slick-carousel>
+    </div>
+</section>

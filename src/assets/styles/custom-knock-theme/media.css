@@ -1,0 +1,104 @@
+@media only screen  and (max-width: 480px) {
+
+} 
+	@media only screen  and (max-width: 576px) {
+
+    }
+	@media only screen  and (max-width: 767px){
+        .banner_content h1{font-size:30px !important;}
+        .banner_content p{font-size:18px !important;}
+        .banner_content a img {
+            margin-right: 15px;
+            width: 140px !important;
+            margin-bottom: 20px;
+        }
+        .flex_box{width:50%;}
+        .marketplace-categories_heading h3{font-size:24px !important;}
+        .marketplace-categories_heading{float:left;}
+        .marketplace-categories{text-align:center;}
+        .circle_img a img{margin:auto;width: 155px !important;
+            height: 145px !important;}
+        .circle_img span{width:100% !important;
+        font-size:16px !important;}
+        .marketplace-deal .btm{padding:5px !important;}
+        .marketplace-deal hr{display:none !important;}
+        .circle_img.col-md-3 {
+            width: 50%;
+        }
+        .flex_box{
+            width: 50%;
+        }
+        footer{padding:40px;}
+        .col-md-4.col-lg-3.col-sm-6.Recommends-products {
+            width: 50%;
+        }
+        .Recommends-products img{height:140px !important;}
+        .Recommends-products h3{font-size:18px !important;}
+        .Recommends-products p.brand span{font-size:16px !important;line-height:20px !important;
+        }
+        .input-group.mb-3.local-search.inner-page-search input {
+            width: 100%;
+        }
+        .local-search{width:100% !important;}
+        .input-group {
+            width: 100% !important;
+            display: inline-block;
+        }
+        button.btn.btn-outline-secondary.local-search-button {
+            width: 100% !important;
+            margin: 10px 0;
+        }
+        .cart_value{top:0 !important;}
+        .ecomm-product .price{font-size:18px !important;line-height:30px !important;}
+    } 
+	@media only screen  and (max-width: 991px){
+       
+    } 
+	@media only screen  and (max-width: 1024px){
+       
+    }
+	@media only screen  and (max-width: 1199px){
+
+    }
+    @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation : portrait) {
+        .circle_img.col-md-3 {
+            width: 50%;
+            max-width: 50%;
+            flex: 50%;
+        }
+        .flex_box{
+            width: 50%;
+            max-width: 50%;
+            flex: 50%;
+        }
+        .banner_content a img {
+            margin-right: 15px;
+            width: 140px !important;
+            margin-bottom: 20px !important;
+        }
+        .col-md-6.new-top-header-left.col-8 {
+            display: flex;
+            width: 100%;
+            flex: 100%;
+            max-width: 100%;
+        }
+        .footer_img img{width:110px;}
+        .home_sidenav{
+            background-color:#007bff !important;
+        }
+    }
+    @media all and (device-width: 1024px) and (device-height: 768px) and (orientation:landscape) {
+        .col-md-6.new-top-header-left.col-8 {
+            display: flex;
+            width: 100%;
+            flex: 100%;
+            max-width: 100%;
+        }
+        .banner_content a img {
+            margin-bottom: 20px;
+        }
+        .footer_app a img {
+            width: 125px !important;
+            margin: 10px 10px 30px 0px;
+        }
+      }

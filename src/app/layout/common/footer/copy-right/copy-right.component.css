@@ -1,0 +1,55 @@
+.copy_rt {
+    font-size: 16px;
+    opacity: 1 !important;
+    margin-left: -10px;
+}
+
+.copy_rght_logo {
+    background-color: #fff;
+    border-radius: 20px;
+    position: absolute;
+    width: 60%;
+    bottom: -17px;
+}
+
+.floating_whatsapp span {
+    position: fixed;
+    right: 50px;
+    bottom: 45px;
+    font-size: 50px;
+    color: rgb(31, 136, 31);
+    cursor: pointer;
+    z-index: 99999;
+}
+
+.floating_whatsapp span:hover {
+    font-size: 65px;
+    transition: 0.6s;
+}
+
+.whats_App_contant {
+    position: fixed;
+    max-width: 190px;
+    right: 37px;
+    bottom: 114px;
+    background: #f9f8f8;
+    border: 1px solid #f3ebeb;
+    padding: 18px;
+    border-radius: 5px;
+    box-shadow: 0px 1px 5px 0px;
+    z-index: 999999;
+}
+
+.chat_now {
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: rgb(31, 136, 31);
+    color: #fff;
+    cursor: pointer;
+}
+
+.footer_logo_middle_align {
+    position: relative;
+    top: 0px;
+}   

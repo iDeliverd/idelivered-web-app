@@ -1,0 +1,85 @@
+<ng-container *ngIf="settings?.app_type == 2 && settings?.selected_template == 2; else default">
+
+  <div class="price_details payment_method_outter theme1_custom_div">
+    <h5 class="p-b-n" [style.color]="style.baseColor">
+      {{'payment' | localization}}
+    </h5>
+    <div class="address-detail payment_method_inner">
+      <div class="payment_method_opt">
+        <div *ngIf="settings.payment_method == '1' || settings.payment_method == '2'">
+          <input [id]="'card'" type="radio" name="payment" [value]="'1'" [(ngModel)]="paymentType"
+            (change)="paymentMode.emit(paymentType)">
+          <label [style.color]="style.baseColor" [for]="'card'">{{'Online' | translate}}</label>
+        </div>
+        <div *ngIf="!settings.payment_method || settings.payment_method != '1'">
+          <input [id]="'cash'" type="radio" (change)="paymentMode.emit(paymentType)" name="payment" [value]="'0'"
+            [(ngModel)]="paymentType" />
+          <label *ngIf="selfPickup == 1 && !hidePaymentModeOption" [style.color]="style.baseColor" [for]="'cash'">
+            {{'cash_on_pickup' | localization}}</label>
+          <label *ngIf="selfPickup != 1 && !hidePaymentModeOption" [style.color]="style.baseColor" [for]="'cash'">
+            {{'cod' | localization | translate}}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #default>
+  <div class="price_details payment_method_outter"
+    [ngStyle]="{'background-color': style.cardBackgroundColor, 'border-color': style.secondaryColor}"
+    [style.borderRadius]="settings?.selected_template == 3 && settings?.app_type == 8 ? '20px': ''">
+    <h5 [style.color]="style.baseColor">
+      {{(('payment' | localization) + " Method") | translate }}
+    </h5>
+    <div class="address-detail payment_method_inner">
+      <div class="payment_method_opt">
+        <div *ngIf="settings.skip_payment_option ==1">
+          <input [id]="'skip'" type="checkbox" name="skip" (click)="skipPayment(isSkip ? false : true)"
+            [checked]="isSkip">
+          <label [style.color]="style.baseColor" class="skipPayment" [for]="'skip'">{{'Skip' | translate}} {{'Payment
+            Option' | translate}}</label>
+        </div>
+        <div *ngIf="(settings.payment_method == '1' || settings.payment_method == '2')  && !isSkip">
+          <input [id]="'card'" type="radio" name="payment" [value]="'1'" [(ngModel)]="paymentType"
+            (change)="paymentMode.emit(paymentType)">
+          <label [style.color]="style.baseColor" [for]="'card'">
+            <span *ngIf="settings?.selected_template!=5;else temp5">{{'online_payment' | localization |
+              translate}}</span>
+            <ng-template #temp5>{{'Online Debit/Credit Card Payment'}}</ng-template>
+          </label>
+        </div>
+        <div *ngIf="(!settings.payment_method || settings.payment_method != '1')  && !isSkip">
+          <input [id]="'cash'" type="radio" (change)="paymentMode.emit(paymentType)" name="payment" [value]="'0'"
+            [(ngModel)]="paymentType" />
+          <label *ngIf="selfPickup == 1 && !hidePaymentModeOption" [style.color]="style.baseColor" [for]="'cash'">
+            {{'cash_on_pickup' | localization | translate}}</label>
+          <label *ngIf="selfPickup != 1 && !hidePaymentModeOption && !hide_cod_on_dinin" [style.color]="style.baseColor"
+            [for]="'cash'">
+            {{'cod' | localization | translate}}</label>
+        </div>
+        <div *ngIf="(settings.wallet_module == 1) && !isSkip">
+          <input [id]="'wallet'" type="radio" name="payment" [value]="'4'" [(ngModel)]="paymentType"
+            (change)="paymentMode.emit(paymentType)">
+          <label [style.color]="style.baseColor" [for]="'wallet'">{{'wallet' |localization | translate}} ( <span
+              *ngIf="settings?.show_currency_after_amount == 0">{{currency}}</span>
+            {{walletAmount || 0}}<span *ngIf="settings?.show_currency_after_amount == 1">{{currency}}</span>)</label>
+          <span class="float-right cursor" [ngStyle]="{color: style.primaryColor}"
+            [routerLink]="['/', 'account','my-wallet']" [queryParams]="{'from_cart': 1}">{{!settings?.enable_i_delivered_theme ? ('Add Amount'|translate) :('Add Money'|translate ) }}</span>
+          <p [ngStyle]="{color: style.primaryColor, 'font-size': '12px'}"
+            *ngIf="(settings.payment_through_wallet_discount>0)    && !isSkip">Pay by wallet, and you will get <span
+              class="font-weight-bold">
+              {{settings.payment_through_wallet_discount}}%
+            </span> discount!</p>
+        </div>
+        <div *ngIf="settings?.is_coin_exchange == 1 && paymentType==='0'" [ngStyle]="{'display':'flex'}">
+          <input id="changeIn" type="checkbox" (change)="changeInRequest.emit($event.currentTarget.checked)">
+          <span [ngStyle]="{color: style.primaryColor, 'font-size': '12px','margin-left':'1em'}">
+            <span class="font-weight-bold">
+              <label [for]="'changeIn'">
+                {{'Request for change in money?' | translate}}</label>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>

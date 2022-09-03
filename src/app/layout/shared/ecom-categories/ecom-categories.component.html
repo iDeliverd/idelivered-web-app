@@ -1,0 +1,109 @@
+<ng-container [ngSwitch]="settings?.selected_template">
+
+    <ng-template [ngSwitchCase]="3">
+        <div class="container categories">
+            <ng-container *ngIf="!isLoading; else skeleton">
+                <div class="row">
+                    <ng-container *ngIf="categories && categories.length; else noData">
+                        <div class="col-lg-3 col-md-6" *ngFor="let category of categories;trackBy:trackByCategoriesFn;">
+                            <img appImage [url]="category?.image" [settings]="settings" [size]="'270x180'"
+                                [src]="category?.image" onError="src = './assets/images/placeholder_image.svg'"
+                                alt="Image 1" class="cursor" (click)="categoryDetail(category)">
+                            <h5 class="text-center">{{category?.name}}</h5>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #noData>
+                        <div class="home-no-data">
+                            <h4 [style.color]="style.baseColor">{{'No' | translate}}
+                                {{'categories' | localization | translate}} {{'Found' | translate}}</h4>
+                        </div>
+                    </ng-template>
+                </div>
+            </ng-container>
+
+
+            <ng-template #skeleton>
+                <div class="skeleton">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6"
+                            *ngFor="let item of util.generateFakeList(4);trackBy:trackByFakeListFn;">
+                            <img>
+                            <h5></h5>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+
+    </ng-template>
+
+
+    <ng-template [ngSwitchCase]="6">
+        <!------------------shop by collections---------------->
+        <section class="shop_buy">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="main_headings">
+                            <h2 class="title mr-0">Shop by Collections</h2>
+                            <p class="title_txt mr-0">Our best selling pieces that you should't miss</p>
+                        </div>
+                        <div class="more_btn">
+                            <a href="javascript.void(0)">View More</a>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="!isLoading; else skeleton">
+
+                        <!-- <div class="row mr-4"> -->
+                        <ng-container *ngIf="categories && categories.length; else noData">
+                            <div class="col-md-3 col-sm-6 botm-margn"
+                                *ngFor="let category of categories.slice(0,8);trackBy:trackByCategoriesFn;">
+                                <div class="transperent_block " style="background-color:#cccccc;">
+                                    <!-- <img src="images/home/product3.jpg" class="img-responsive" alt=""> -->
+                                    <img appImage [url]="category?.image" [settings]="settings" [size]="'760x420'"
+                                        [src]="category?.image" onError="src = './assets/images/placeholder_image.svg'"
+                                        alt="Image 1" class="cursor img-responsive" (click)="categoryDetail(category)">
+                                    <div class="black_hover_block">
+                                        <div class="blur"></div>
+                                        <div class="black_hover_block_text">
+                                            <ul class="pad0 bg_black">
+                                                <h3>{{category?.name}}</h3>
+                                                <a class="cursor" (click)="categoryDetail(category)">shop
+                                                    now</a>
+                                                <div class="clearfix"></div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-template #noData>
+                            <div class="home-no-data">
+                                <h4 [style.color]="style.baseColor">{{'No' | translate}}
+                                    {{'categories' | localization | translate}} {{'Found' | translate}}</h4>
+                            </div>
+                        </ng-template>
+                        <!-- </div> -->
+
+                    </ng-container>
+
+                    <ng-template #skeleton>
+                        <div class="col-md-12 skeleton">
+                            <div class="col-lg-3 col-md-6"
+                                *ngFor="let item of util.generateFakeList(4);trackBy:trackByFakeListFn;">
+                                <div class="transperent_block ">
+                                    <img>
+                                    <h5></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </section>
+    </ng-template>
+
+</ng-container>
